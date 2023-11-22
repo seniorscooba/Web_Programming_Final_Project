@@ -1,0 +1,39 @@
+<!-- 
+This handlebar file will be rendered when the following route is hit: GET http://localhost:3000/
+ 
+ The title of the document should be "Marvel Character Finder". You should have the title set as the <title> element of the HTML document and as an h1 in your document.
+
+Your page should reference a CSS file, /public/site.css; this file should have at least 10 rulesets you must use at least 5 of them on this page. 
+
+You should have a main element, and inside of the main element have a p element with a brief (2-3 sentence description) of what your website does.
+
+Also inside the main element, you will have a form; this form will POST to /searchmarvelcharacters. This form will have an input and a label; You will give the input and name AND id of "searchCharacterByName".  The label should properly reference the same id as the input. You should also have a input with a type of submit that submits the form. 
+ -->
+ <article class="characters">
+  <h1 class="home-tool-header">Homepage</h1>
+  <p class="home-about">
+    This website is a platform for lovers of words and writers of all backgrounds. We hope to bring together the literary community.
+  </p>
+  <h1 class="home-search-header">Search for Mavel Character</h1>
+  <form action="/searchmarvelcharacters" method="POST" class="characters-form">
+    <label for="searchCharacterByName" class="search-label {
+">
+      Character Name
+      <input type="text" name="searchCharacterByName" class="search-input" id="searchCharacterByName" placeholder="Character Name" value="{{body}}" >
+    </label>
+
+    <br>
+    <button type="submit" class="submit-button">Search</button>
+    {{!-- <input type="hidden" name='_method' value="PUT" /> --}}
+  </form>
+  {{#if hasErrors}}
+  <ul class="error-list">
+    {{#each errors}}
+    <li>
+      {{this}}
+    </li>
+    {{/each}}
+  </ul>
+  {{/if}}
+
+</article>

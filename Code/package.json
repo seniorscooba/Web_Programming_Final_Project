@@ -1,0 +1,27 @@
+{
+  "name": "cs546_final_project",
+  "version": "1.0.0",
+  "description": "Web programming final project",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "seed": "node ./tasks/seed.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-handlebars": "^6.0.6",
+    "mongodb": "^4.13.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seniorscooba/Web_Programming_Final_Project.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seniorscooba/Web_Programming_Final_Project/issues"
+  },
+  "homepage": "https://github.com/seniorscooba/Web_Programming_Final_Project#readme"
+}

@@ -1,0 +1,30 @@
+{{!
+This page will respond with a valid HTML document with the results returned from the API.
+The title of the document should be "Marvel Characters Found". You should have the title set as the <title> element of
+    the HTML document and as an h1 in your document. In an h2 element, you will print the supplied
+    searchCharacterByName.
+
+    You must also provide an a tag that links back to your / route with the text Make another search.
+
+    Your page should reference a CSS file, /public/site.css; this file should have at least 10 rulesets you must use at
+    least 5 of them on this page.
+
+    You should have a main element, and inside of the main element have a ol tag that has a list of up to 15 characters
+    matching
+    the searchCharacterByName found in the request body in the following format (after searching spider).
+    }}
+<h1 class="characters-found-header">Marvel Characters Found</h1>
+<h2 class="search-name-header">{{searchName}}</h2>
+<ol>
+  {{#each characters}}  
+    <li>
+        <label>{{name}}</label>
+            <a class="search-name-anchor" href="/marvelcharacter/{{id}}">{{name}}</a>
+    </li>
+  {{/each}}
+</ol>
+
+{{#if noCharactersFound}}
+    <p class="not-found">We're sorry, but no results were found for {{searchName}}.</p>
+{{/if}}
+<a class="home-anchor" href="/">Search for Another Character</a>

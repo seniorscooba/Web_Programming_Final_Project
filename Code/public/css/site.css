@@ -1,0 +1,81 @@
+/*This file should have 10 CSS rulesets */
+.home-about {
+	text-align: center;
+	align-content: center;
+}
+
+.not-found {
+	text-align: left;
+}
+
+h1 {
+	text-align: center;
+}
+
+h2 {
+	text-align: center;
+}
+
+ol {
+	text-align: left;
+}
+
+.characters-found-header {
+	text-align: left;
+}
+
+.search-name-header {
+	text-align: left;
+}
+
+.home-tool-header {
+	border: 3px solid green;
+}
+
+.home-search-header {
+	border: 3px solid orange;
+}
+
+.search-label {
+    text-align: center;
+    display: block;
+}
+
+.search-input {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.submit-button {
+    margin: 0 auto;
+    display: block;
+}
+
+.search-name-achor {
+    text-align: center;
+}
+
+.home-anchor {
+	text-align: center;
+}
+
+.character-info-header {
+	text-align: center;
+}
+
+.character-image {
+	margin: 0 auto;
+    display: block;
+}
+
+.character-description {
+	text-align: left;
+}
+
+.comic-list {
+	text-align: left;
+}
+
+.comic-list-header {
+	text-align: left;
+}
