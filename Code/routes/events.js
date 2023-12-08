@@ -1,13 +1,21 @@
 //import express and express router as shown in lecture code and worked in previous labs.  Import your data functions from /data/characters.js that you will call in your routes below
 import {Router} from 'express';
 const router = Router();
-import * as characterData from '../data/characters.js';
 import validation from '../validation.js';
 
 router.route('/').get(async (req, res) => {
   //code here for GET will render the home handlebars file
   try {
-    res.render('home', { title:'Marvel Character Finder' });
+    res.render('events', { title:'Events' });
+  } catch (e) {
+    res.status(500).json({error: e});
+  }
+});
+
+router.route('/events').get(async (req, res) => {
+  //code here for GET will render the home handlebars file
+  try {
+    res.render('events', { title:'Events' });
   } catch (e) {
     res.status(500).json({error: e});
   }

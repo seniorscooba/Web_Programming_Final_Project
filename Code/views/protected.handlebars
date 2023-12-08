@@ -1,0 +1,11 @@
+{{!--
+
+If the user is logged in , and 'GET /protected' endpoint is called, you will render this view based on the specs.
+
+--}}
+  <h1>Protected Page</h1>
+  <p>{{ProtectedString}}</p>
+  {{#if IsAdmin}}
+    <a class="admin-anchor" href="/admin">Admin Page</a>
+  {{/if}}
+  <a class="logout-anchor" href="/logout">LOGOUT</a>

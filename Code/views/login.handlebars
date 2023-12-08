@@ -1,0 +1,31 @@
+{{!--
+
+login form handlebar template
+
+--}}
+<h1 class="login-user-header">User Login</h1>
+<form action="/login" method="POST" class="login-form" id="login-form">
+      <div class="form-group">
+        <label for="emailAddressInput">Email Address</label>
+        <input type="email" class="form-control" id="emailAddressInput" name="emailAddressInput" placeholder="Email Address"
+          value="{{emailAddress}}">
+      </div>
+      <div class="form-group">
+        <label for="passwordInput">Password</label>
+        <input type="password" class="form-control" id="passwordInput" name="passwordInput" placeholder="Password"
+          value="{{password}}">
+      </div>
+    <br>
+    <div class="form-group hidden" id="error-container">
+      <p class="alert alert-danger text-goes-here">
+      </p>
+    </div>   
+    <button type="submit" class="btnClass">login</button>
+    {{!-- <input type="hidden" name='_method' value="PUT" /> --}}
+  </form>
+  {{#if hasErrors}}
+    <p class="errorCode-p">{{errorCode}}</p>
+    <p class="error-p">{{error}}</p>
+  {{/if}}
+
+  <a class="register-anchor" href="/register">Don't have an account? Click here to create one!</a>
