@@ -8,6 +8,11 @@
 	text-align: left;
 }
 
+.posts-page-header {
+	text-align: center;
+	align-content: center;
+}
+
 h1 {
 	text-align: center;
 }
@@ -18,6 +23,10 @@ h2 {
 
 ol {
 	text-align: left;
+}
+
+div {
+	text-align: center;
 }
 
 .characters-found-header {
