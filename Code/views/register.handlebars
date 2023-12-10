@@ -4,7 +4,7 @@ registration handelbars
 
 --}}
 <h1 class="register-user-header">Register User</h1>
-<form action="/register" method="POST" class="registration-form" id="registration-form" >
+<form action="../user/register" method="POST" class="registration-form" id="registration-form" >
       <div class="form-group">
         <label for="firstName">First Name</label>
         <input type="text" class="form-control" id="firstNameInput" name="firstNameInput" placeholder="First Name"
@@ -46,5 +46,5 @@ registration handelbars
     {{!-- <input type="hidden" name='_method' value="PUT" /> --}}
   </form>
 
-  <a class="login-anchor" href="/login">Already have an account? Click here to log-in</a>
+  <a class="login-anchor" href="../user/login">Already have an account? Click here to log-in</a>
 

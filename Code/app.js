@@ -55,7 +55,7 @@ app.get('/', (req, res, next) => {
   } else {
      let log = `${new Date().toUTCString()}: ${req.method}: ${req.originalUrl} (Authenticated)`;
      console.log(log);
-    return res.redirect('/login');
+    return res.redirect('/posts');
   }
 });
 
