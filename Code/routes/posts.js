@@ -6,22 +6,17 @@ import validation from '../validation.js';
 router.route('/').get(async (req, res) => {
   //code here for GET will render the home handlebars file
   try {
-    res.render('posts', { title:'Posts' });
+    if(req.session.user)
+        res.render('posts', { title:'Posts', loggedIn:true });
+      else
+        res.render('posts', { title:'Posts', loggedIn:false });
   } catch (e) {
     res.status(500).json({error: e});
   }
 });
 
-router.route('/posts').get(async (req, res) => {
-  //code here for GET will render the home handlebars file
-  try {
-    res.render('posts', { title:'Posts' });
-  } catch (e) {
-    res.status(500).json({error: e});
-  }
-});
 
-router.route('/posts').post(async (req, res) => {
+router.route('/').post(async (req, res) => {
   //code here for POST this is where your form will be submitting searchCharacterByName and then call your data function passing in the searchCharacterByName and then rendering the search results of up to 15 characters.
 // noticed searchCharacterByName in body, need to extract
 const SEARCH_ID_NAME = "searchCharacterByName";
@@ -53,28 +48,6 @@ try {
   }
 } catch (e) {
 }
-});
-
-router.route('/marvelcharacter/:id').get(async (req, res) => {
-  //code here for GET a single character
-  try
-  {
-    let url = req.url.split('/');
-    let id = url[2];
-    let singleData = await characterData.searchCharacterById(id);
-    if(singleData == undefined || singleData.length < 1)
-      throw "Error";
-    let imgData = singleData[0]['thumbnail'];
-    let imgPath = imgData.path + '.' + imgData.extension;
-    res.render('characterById', {singleData: singleData,
-                    imgPath: imgPath,
-                    title: singleData[0]['name']});
-  }
-  catch(exception){
-    res.status(404);
-    res.render('error', {hasErrors: true,
-      error: '404 Error: Could not find that character'});
-  }
 });
 
 //export router

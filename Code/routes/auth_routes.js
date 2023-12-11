@@ -71,11 +71,8 @@ router
       dayFromNow.setHours(dayFromNow.getHours() + 24);
       req.session.user = {firstName: userData.firstName, lastName: userData.lastName, emailAddress: email, role: userData.role};
       res.cookie('AuthState', '', {expires: dayFromNow});
-
-      if(userData.role === "admin")
-        res.status(200).redirect('/admin');
-      else
-        res.status(200).redirect('/protected');
+      
+      res.status(200).redirect('/posts');
     }
     catch(exception){
       res.status(400).render('login', {

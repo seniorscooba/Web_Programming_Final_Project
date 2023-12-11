@@ -45,9 +45,9 @@
     return returnFunction;
   }
 
-  const staticForm = document.getElementById('static-form');
+  const postForm = document.getElementById('post-form');
 
-  if (staticForm) {
+  if (postForm) {
     // We can store references to our elements; it's better to
     // store them once rather than re-query the DOM traversal each time
     // that the event runs.

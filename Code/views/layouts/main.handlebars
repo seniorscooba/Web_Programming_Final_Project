@@ -11,7 +11,12 @@
     <div id="navigation-bar">
       <a class="home-anchor" href="/posts">Posts Page</a>
       <a class="home-anchor" href="/events">Events Page</a>
-      <a class="home-anchor" href="/user/login">Login Page</a> 
+        </form>
+        {{#if loggedIn}}
+            <a class="logout-anchor" href="/user/logout">Logout Page</a>   
+        {{else}}           
+            <a class="home-anchor" href="/user/login">Login Page</a> 
+        {{/if}}   
     </div>
 
     <main>

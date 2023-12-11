@@ -10,11 +10,30 @@ You should have a main element, and inside of the main element have a p element 
 Also inside the main element, you will have a form; this form will POST to /searchmarvelcharacters. This form will have an input and a label; You will give the input and name AND id of "searchCharacterByName".  The label should properly reference the same id as the input. You should also have a input with a type of submit that submits the form. 
  -->
  <article class="posts">
-  <h1 class="home-tool-header">Posts Page</h1>
-  <p class="home-about">
-    Posts Page
-  </p>
   <h1 class="posts-page-header">Posts Page</h1>
+  {{#if loggedIn}}
+  <form action="/posts" method="POST" class="post-form" id="post-form">
+      <div class="form-group">
+        <label for="postTitleInput">Post Title</label>
+        <input type="text" class="form-control" id="postTitleInput" name="postTitleInput" placeholder="Post Title Input"
+          value="{{postTitle}}">
+      </div>
+      <div class="form-group">
+        <label for="postContentInput">Content</label>
+        <textarea name="postContentInput" cols="50" rows="10"></textarea>
+      </div>
+    <br>
+    <div class="form-group hidden" id="error-container">
+      <p class="alert alert-danger text-goes-here">
+      </p>
+    </div>   
+    <button type="submit" id="post-submit" class="btnClass">Submit Post</button>
+    {{!-- <input type="hidden" name='_method' value="PUT" /> --}}
+  </form>
+  {{/if}}
 
+  <div class="form-group hidden" id="posts-container">
+      <ol id="post-list"> </ol>
+  </div> 
 
 </article>
