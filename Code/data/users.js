@@ -9,7 +9,6 @@ export const registerUser = async (
   password,
   role
 ) => {
-
   try {
     // create new user
     const newUser = {};
@@ -25,9 +24,12 @@ export const registerUser = async (
     const saltRounds = 16;
     newUser.password = await bcrypt.hash(password, saltRounds);
     // insert user info to database
-    const newInsertInformation = await usersCollection.insertOne(newUser);
-    if (!newInsertInformation.insertedId) throw 'Insert failed!';
-    return { 'insertedUser': true }
+    const insertStatus = await usersCollection.insertOne(newUser);
+    if (!insertStatus.insertedId) throw 'Insert failed!';
+    return { 
+      'insertedUser': true,
+      'insertedId': insertStatus.insertedId 
+   }
   }
   catch (exception) {
     throw exception;
@@ -45,7 +47,12 @@ export const loginUser = async (emailAddress, password) => {
   const saltRounds = 16;
   let comparedPassword = await bcrypt.compare(password, user.password);
   if (comparedPassword === true) {
-    return { firstName: user.firstName, lastName: user.lastName, emailAddress: emailAddress, role: user.role };
+    return { 
+      _id: user._id,
+      firstName: user.firstName, 
+      lastName: user.lastName, 
+      emailAddress: emailAddress, 
+      role: user.role };
   }
   else {
     throw "Either the email address or password is invalid";

@@ -4,24 +4,30 @@ import { posts } from '../config/mongoCollections.js';
 export const createPost = async (
     userId,
     userName,
-    postBody,
-    postVotes
+    postTitle,
+    postContent,
 ) => {
     try {
         // validate post creation information
-        // assumes userId and userName correct
-        validation.checkString(postText, "Post body");
+        // assumes userName correct
+        validation.checkId(userId)
+        validation.checkString(postTitle, "Post title");
+        validation.checkString(postContent, "Post content");
         // create post
         const newPost = {
             userId: userId,
             userName: userName,
-            postBody: postBody,
-            postVotes: postVotes
+            postTitle: postTitle,
+            postContent: postContent,
+            postDate: new Date().toUTCString(),
+            postUpvotes: [],
+            postComments: [],
         };
         // insert post into database
         const postsCollection = await posts();
-        const insertionStatus = await postsColleciton.insertOne(newPost);
+        const insertionStatus = await postsCollection.insertOne(newPost);
         if (!insertionStatus.insertedId) throw "Insert failed!";
+        console.log(insertionStatus);
         return { 'insertedUser': true };
     } catch (e) {
         throw e;
