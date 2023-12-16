@@ -19,10 +19,17 @@
     <button type="submit" id="post-submit" class="btnClass">Submit Post</button>
     {{!-- <input type="hidden" name='_method' value="PUT" /> --}}
   </form>
+
   {{/if}}
 
   <div class="form-group hidden" id="posts-container">
-      <ol id="post-list"> </ol>
+      <ul id="post-list"> </ul>
+      <ul>
+        {{#each posts}}  
+        <li>
+          <p>{{postBody}}</p>
+        </li>
+        {{/each}}
+        </ul>      
   </div> 
-
 </article>

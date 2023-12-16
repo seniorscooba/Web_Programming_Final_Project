@@ -20,14 +20,14 @@ export const registerUser = async (
     const existingEmail = await usersCollection.findOne({ emailAddress: emailAddress });
     if (existingEmail) throw "Email already exists!";
     newUser.password = validation.checkPassword(password, "Password");
-    newUser.role = validation.checkRole(role, "Role");
+    
     // hash password using bcrypt
     const saltRounds = 16;
     newUser.password = await bcrypt.hash(password, saltRounds);
     // insert user info to database
     const newInsertInformation = await usersCollection.insertOne(newUser);
     if (!newInsertInformation.insertedId) throw 'Insert failed!';
-    return { 'insertedUser': true }
+    return { '_id': newInsertInformation.insertedId }
   }
   catch (exception) {
     throw exception;

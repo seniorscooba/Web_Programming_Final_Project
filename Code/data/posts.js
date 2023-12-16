@@ -10,7 +10,7 @@ export const createPost = async (
     try {
         // validate post creation information
         // assumes userId and userName correct
-        validation.checkString(postText, "Post body");
+        validation.checkString(postBody, "Post body");
         // create post
         const newPost = {
             userId: userId,
@@ -20,7 +20,7 @@ export const createPost = async (
         };
         // insert post into database
         const postsCollection = await posts();
-        const insertionStatus = await postsColleciton.insertOne(newPost);
+        const insertionStatus = await postsCollection.insertOne(newPost);
         if (!insertionStatus.insertedId) throw "Insert failed!";
         return { 'insertedUser': true };
     } catch (e) {
