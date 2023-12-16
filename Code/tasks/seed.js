@@ -20,6 +20,18 @@ const post1 = await posts.createPost(
   "This is some seed post data yall",
   user1.postVotes
 );
+const post2 = await posts.createPost(
+  user1Id,
+  user1.userName,
+  "This is a second post",
+  user1.postVotes
+);
+const post3 = await posts.createPost(
+  user1Id,
+  user1.userName,
+  "This is a third post",
+  user1.postVotes
+);
 //const removed = await attendees.removeAttendee(attendee._id.toString());
 //const deletedInfo = await events.remove(event1Id);
 

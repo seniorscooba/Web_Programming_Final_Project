@@ -1,5 +1,6 @@
 import validation from '../validation.js';
 import { posts } from '../config/mongoCollections.js';
+import {ObjectId} from 'mongodb';
 
 export const createPost = async (
     userId,
@@ -10,8 +11,8 @@ export const createPost = async (
     try {
         // validate post creation information
         // assumes userId and userName correct
-        validation.checkString(postBody, "Post body");
         // create post
+        postVotes = [];
         const newPost = {
             userId: userId,
             userName: userName,
@@ -22,7 +23,7 @@ export const createPost = async (
         const postsCollection = await posts();
         const insertionStatus = await postsCollection.insertOne(newPost);
         if (!insertionStatus.insertedId) throw "Insert failed!";
-        return { 'insertedUser': true };
+        return await get(insertionStatus.insertedId.toString());
     } catch (e) {
         throw e;
     }
@@ -33,4 +34,12 @@ export const getAllPosts = async () => {
     const postList = await postCollection.find({}).toArray();
     if (!postList) throw 'Could not get all posts';
     return postList;
+};
+
+export const get = async (postId) => {
+    postId = validation.checkId(postId);
+    const postCollection = await posts();
+    const post = await postCollection.findOne({_id: new ObjectId(postId)});
+    if (!post) throw 'Error: Post not found';
+    return post;
 };

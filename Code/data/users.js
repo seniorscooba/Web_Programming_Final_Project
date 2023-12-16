@@ -45,7 +45,7 @@ export const loginUser = async (emailAddress, password) => {
   const saltRounds = 16;
   let comparedPassword = await bcrypt.compare(password, user.password);
   if (comparedPassword === true) {
-    return { firstName: user.firstName, lastName: user.lastName, emailAddress: emailAddress, role: user.role };
+    return { firstName: user.firstName, lastName: user.lastName, emailAddress: emailAddress, role: user.role, userId: user._id.toString() };
   }
   else {
     throw "Either the email address or password is invalid";

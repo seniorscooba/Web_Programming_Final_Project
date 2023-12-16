@@ -69,7 +69,7 @@ router
 
       const dayFromNow = new Date();
       dayFromNow.setHours(dayFromNow.getHours() + 24);
-      req.session.user = {firstName: userData.firstName, lastName: userData.lastName, emailAddress: email, role: userData.role};
+      req.session.user = {firstName: userData.firstName, lastName: userData.lastName, emailAddress: email, role: userData.role, userId: userData.userId};
       res.cookie('AuthState', '', {expires: dayFromNow});
       
       res.status(200).redirect('/posts');
