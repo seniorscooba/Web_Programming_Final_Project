@@ -9,7 +9,6 @@ export const registerUser = async (
   password,
   role
 ) => {
-
   try {
     // create new user
     const newUser = {};
@@ -46,11 +45,11 @@ export const loginUser = async (emailAddress, password) => {
   let comparedPassword = await bcrypt.compare(password, user.password);
   if (comparedPassword === true) {
     return { 
-        firstName: user.firstName, 
-        lastName: user.lastName, 
-        emailAddress: emailAddress, 
-        role: user.role, 
-        userId: user._id.toString() };
+      _id: user._id,
+      firstName: user.firstName, 
+      lastName: user.lastName, 
+      emailAddress: emailAddress, 
+      role: user.role };
   }
   else {
     throw "Either the email address or password is invalid";

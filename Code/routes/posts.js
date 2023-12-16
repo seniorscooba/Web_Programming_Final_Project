@@ -1,8 +1,9 @@
 //import express and express router as shown in lecture code and worked in previous labs.  Import your data functions from /data/characters.js that you will call in your routes below
-import {Router} from 'express';
+import { Router } from 'express';
 const router = Router();
 import * as posts from '../data//posts.js';
 import validation from '../validation.js';
+import { createPost } from '../data/posts.js';
 
 router.route('/').get(async (req, res) => {
   //code here for GET will render the home handlebars file
@@ -20,46 +21,27 @@ router.route('/').get(async (req, res) => {
   }
 });
 
-
 router.route('/').post(async (req, res) => {
-  //code here for POST this is where your form will be submitting searchCharacterByName and then call your data function passing in the searchCharacterByName and then rendering the search results of up to 15 characters.
-// noticed searchCharacterByName in body, need to extract
-const POST_TITLE_KEY = "postTitleInput";
-const POST_CONTENT_KEY = "postContentInput";
-try {
-  if(POST_TITLE_KEY in req.body && POST_CONTENT_KEY in req.body)
-  {
-    let postTitle = req.body[POST_TITLE_KEY];
-    let postContent = req.body[POST_CONTENT_KEY];
-    let userId = req.session.user.userId;
-    let userName = req.session.user.emailAddress;
+    try {
+      if(req.session.user){
+        let postTitle = validation.checkString(req.body['postTitleInput'], 'Post title');
+        let postContent = validation.checkString(req.body['postContentInput'], 'Post content');
+        let user = req.session.user;
+        // TODO: replace first + last with username
+        // I did this because I am wokring in the "postsbranch"
+        // And I dont want to adjust user function just yet
+        let returnPost = await createPost(user._id.toString(), user.firstName + user.lastName, postTitle, postContent);
+        
+        console.log("made it to post")
 
-    // check if 400 error
-    postTitle = postTitle.trim();
-    postContent = postContent.trim();
-    if(postTitle == '' || postContent == '' || userId == undefined || userId == ''){
-      res.status(400);
-      res.render('error', {hasErrors: true,
-        error: '400 Error: Enter search name',
-        title:'Posts'});
+        if (!returnPost) {
+          throw "Failed to insert post!";
+        }
+        res.status(200).redirect('/posts');
+      }
+    } catch (e) {
+      res.status(500).json({ error: e });
     }
-
-    const postId = await posts.createPost(userId, userName, postContent, null);
-    // make query to API
-    res.status(200);
-    const postList = await posts.getAllPosts();
-    if(postId)
-      res.render('posts', { title:'Posts',
-                            loggedIn:true,
-                            posts:postList});
-    else
-      res.render('error', {hasErrors: true,
-        error: `We're sorry, but we could not post your content`,
-        title:'Could not post'});
-  }
-} catch (e) {
-  console.log(e);
-}
 });
 
 //export router
