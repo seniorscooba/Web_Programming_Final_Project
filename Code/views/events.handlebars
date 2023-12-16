@@ -10,11 +10,57 @@ You should have a main element, and inside of the main element have a p element 
 Also inside the main element, you will have a form; this form will POST to /searchmarvelcharacters. This form will have an input and a label; You will give the input and name AND id of "searchCharacterByName".  The label should properly reference the same id as the input. You should also have a input with a type of submit that submits the form. 
  -->
  <article class="events">
-  <h1 class="home-tool-header">Events Page</h1>
-  <p class="home-about">
-    Events Page
-  </p>
-  <h1 class="home-search-header">Events Page</h1>
+  <h1 class="events-page-header">Events Page</h1>
+  {{#if loggedIn}}
+  <form action="/events" method="POST" class="events-form" id="events-form">
+      <div class="form-group">
+        <label for="eventNameInput">Event Name</label>
+        <input type="text" class="form-control" id="eventNameInput" name="eventNameInput" placeholder="Event Name Input"
+          value="{{body}}">
+      </div>
+      <div class="form-group">
+        <label for="eventLocationInput">Event Location</label>
+        <input type="text" class="form-control" id="eventLocationInput" name="eventLocationInput" placeholder="Event Location Input"
+          value="{{body}}">
+      </div>
+      <div class="form-group">
+        <label for="eventDateInput">Event Date</label>      
+        <input type="text" class="form-control" id="eventDateInput" name="eventDateInput" placeholder="MM/DD/YYYY"
+          value="{{body}}">
+      </div>
+      <div class="form-group">
+        <label for="eventTimeInput">Event Time</label>
+        <input type="text" class="form-control" id="eventTimeInput" name="eventTimeInput" placeholder="HH:MM(AM/PM)"
+          value="{{body}}">
+      </div>
+      <div class="form-group">
+        <label for="descriptionInput">Event Description</label>
+        <textarea name="descriptionInput" cols="50" rows="10"> </textarea>
+      </div>
+    <br>
+    <div class="form-group hidden" id="error-container">
+      <p class="alert alert-danger text-goes-here">
+      </p>
+    </div>   
+    <button type="submit" id="post-submit" class="btnClass">Create event</button>
+  </form>
 
+  {{/if}}
 
+  <div class="form-group hidden" id="events-container">
+      <ul id="event-list">
+        {{#each events}}  
+        <div>
+          <h2>{{eventName}}</h2>    
+          <label>Location: {{eventLocation}}</label>  
+          <br/>
+          <label>Date: {{eventDate}}</label>  
+          <br/>
+          <label>Time: {{eventTime}}</label>
+          <br/>
+          <p>Description: {{description}}</p>
+        </div>
+        {{/each}}
+        </ul>      
+  </div> 
 </article>

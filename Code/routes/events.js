@@ -8,26 +8,17 @@ import { eventData } from '../data/index.js'
 router.route('/').get(async (req, res) => {
   //code here for GET will render the home handlebars file
   try {
-    res.render('events', { title:'Events' });
+    const eventList = await eventData.getAll();
+    res.render('events', { title:'Events',
+                              loggedIn:true,
+                              events:eventList });
   } catch (e) {
     res.status(500).json({error: e});
   }
 });
 
 router
-  .route('/events')
-  .get(async (req, res) => {
-  //code here for GET getAll
-    try {
-      const eventList = await eventData.getAll()
-      res.json(eventList);
-    } catch (e) {
-      res.status(500).json({error: e});
-    }
-  }); 
-  
-router
-  .route('/events') 
+  .route('/') 
   .post(async (req, res) => {
     const body = req.body
     console.log(req.body)
@@ -35,49 +26,21 @@ router
       return res.status(400).json({error: 'There are no fields in the request body'});
     }
     try {
-      body.eventName = validation.checkString(body.eventName, "event name")
-      body.eventDescription = validation.checkString(body.eventDescription, "event description")
-      body.eventLocation = validation.checkString(body.eventLocation, "event location")
-      body.eventDate = validation.checkString(body.eventDate, "event date")
-      body.eventTime = validation.checkString(body.eventTime, "event time")
+      body.eventNameInput = validation.checkString(body.eventNameInput, "event name")
+      body.descriptionInput = validation.checkString(body.descriptionInput, "event description")
+      body.eventLocationInput = validation.checkString(body.eventLocationInput, "event location")
+      body.eventDateInput = validation.checkString(body.eventDateInput, "event date")
+      body.eventTimeInput = validation.checkString(body.eventTimeInput, "event time")
     } catch (e) {
       return res.status(404).json(e);
     }
     try {
-      await eventData.create(req.params.id, body.eventName, body.eventDescription, body.eventLocation, body.eventDate, body.eventTime);
-      let event = await eventData.get(req.params.id);
-      return res.status(200).json(event);
+      let createdEvent = await eventData.createEvent(body.eventNameInput, body.descriptionInput, body.eventLocationInput, body.eventDateInput, body.eventTimeInput);
+      let eventId = await eventData.get(createdEvent._id);
+      res.status(200).redirect('/events');
     } catch (e) {
       return res.status(404).json(e);
     }
   });
 
-router
-  .route('/events')
-  .delete(async (req, res) => {
-    try {
-      if (!ObjectId.isValid(req.params.id)) { throw "Id not valid" }
-    } catch (e) {
-      return res.status(400).json({error: e});
-    }
-    try {
-      let event = await eventData.get(req.params.id);
-      if (!event) { throw "event does not exist" }
-      await eventData.remove(req.params.id);
-      return res.json({id: req.params.id, deleted: true});
-    } catch (e) {
-      return res.status(404).json({error: e});
-    }
-  })
-
-  /*
-router
-  .route('/events')
-  .post(async (req, res) => {
-    try {
-
-    }
-  })
-*/
-//export router
 export default router;
