@@ -2,7 +2,7 @@
   "name": "cs546_final_project",
   "version": "1.0.0",
   "description": "Web programming final project",
-  "main": "app.js",
+  "main": "./tasks/seed.js",
   "type": "module",
   "scripts": {
     "seed": "node ./tasks/seed.js",

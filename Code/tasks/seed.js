@@ -18,27 +18,23 @@ const user1Id = user1._id.toString();
 const post1 = await posts.createPost(
   user1Id,
   user1.userName,
-  "This is some seed post data yall",
-  user1.postVotes
+  "This is a post title",
+  "some seed post data yall"
 );
 const post2 = await posts.createPost(
   user1Id,
   user1.userName,
   "This is a second post",
-  user1.postVotes
+  "some seed post data yall"
 );
 const post3 = await posts.createPost(
   user1Id,
   user1.userName,
   "This is a third post",
-  user1.postVotes
+  "some seed post data yall"
 );
 //const removed = await attendees.removeAttendee(attendee._id.toString());
 //const deletedInfo = await events.remove(event1Id);
-
-console.log('Done seeding database');
-
-await closeConnection();
 
 let event1 
 
