@@ -22,12 +22,12 @@
   {{/if}}
 
   <div class="form-group hidden" id="posts-container">
-      <ul id="post-list"> </ul>
-      <ul>
+      <ul id="post-list">
         {{#each posts}}  
-        <li>
+        <div>
+          <h2>{{postTitle}}</h2>
           <p>{{postBody}}</p>
-        </li>
+        </div>
         {{/each}}
         </ul>      
   </div> 

@@ -43,3 +43,20 @@ export const get = async (postId) => {
     if (!post) throw 'Error: Post not found';
     return post;
 };
+
+export const getFrequencyBreakdown = async (postContent) => {
+    //let id = postContent.id;
+    //let content = postContent.body;
+
+    let testStr = "THIS IS A a test string to find al the words~!";
+    // split all words on white space
+    let words = content.split(' ');
+    let wordCountMap = {};
+    for(word in words){
+        if(wordCountMap[word])
+            wordCountMap[word]++;
+        else
+            wordCountMap[word] = 1; 
+    }
+    return wordCountMap;
+};
