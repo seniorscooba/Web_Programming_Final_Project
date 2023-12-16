@@ -2,6 +2,8 @@
 import {Router} from 'express';
 const router = Router();
 import validation from '../validation.js';
+import { eventData } from '../data/index.js'
+
 
 router.route('/').get(async (req, res) => {
   //code here for GET will render the home handlebars file
@@ -12,70 +14,70 @@ router.route('/').get(async (req, res) => {
   }
 });
 
-router.route('/events').get(async (req, res) => {
-  //code here for GET will render the home handlebars file
-  try {
-    res.render('events', { title:'Events' });
-  } catch (e) {
-    res.status(500).json({error: e});
-  }
-});
-
-router.route('/searchmarvelcharacters').post(async (req, res) => {
-  //code here for POST this is where your form will be submitting searchCharacterByName and then call your data function passing in the searchCharacterByName and then rendering the search results of up to 15 characters.
-// noticed searchCharacterByName in body, need to extract
-const SEARCH_ID_NAME = "searchCharacterByName";
-try {
-  if(SEARCH_ID_NAME in req.body)
-  {
-    let userCharacterQuery = req.body[SEARCH_ID_NAME];
-
-    // check if 400 error
-    userCharacterQuery = userCharacterQuery.trim();
-    if(userCharacterQuery == ''){
-      res.status(400);
-      res.render('error', {hasErrors: true,
-        error: '400 Error: Enter search name',
-        title:'Marvel Characters Found'});
+router
+  .route('/events')
+  .get(async (req, res) => {
+  //code here for GET getAll
+    try {
+      const eventList = await eventData.getAll()
+      res.json(eventList);
+    } catch (e) {
+      res.status(500).json({error: e});
     }
+  }); 
+  
+router
+  .route('/events') 
+  .post(async (req, res) => {
+    const body = req.body
+    console.log(req.body)
+    if (!body || Object.keys(body).length === 0) {
+      return res.status(400).json({error: 'There are no fields in the request body'});
+    }
+    try {
+      body.eventName = validation.checkString(body.eventName, "event name")
+      body.eventDescription = validation.checkString(body.eventDescription, "event description")
+      body.eventLocation = validation.checkString(body.eventLocation, "event location")
+      body.eventDate = validation.checkString(body.eventDate, "event date")
+      body.eventTime = validation.checkString(body.eventTime, "event time")
+    } catch (e) {
+      return res.status(404).json(e);
+    }
+    try {
+      await eventData.create(req.params.id, body.eventName, body.eventDescription, body.eventLocation, body.eventDate, body.eventTime);
+      let event = await eventData.get(req.params.id);
+      return res.status(200).json(event);
+    } catch (e) {
+      return res.status(404).json(e);
+    }
+  });
 
-    const characterList = await characterData.searchCharacterByName(userCharacterQuery);
-    // make query to API
-    res.status(200);
-    if(characterList.length > 0)
-      res.render('characterSearchResults', {characters: characterList,
-        searchName: userCharacterQuery,
-        title:'Marvel Characters Found'});
-    else
-      res.render('error', {hasErrors: true,
-        error: `We're sorry, but no results were found for ${userCharacterQuery} in API`,
-        title:'Marvel Characters Found'});
-  }
-} catch (e) {
-}
-});
+router
+  .route('/events')
+  .delete(async (req, res) => {
+    try {
+      if (!ObjectId.isValid(req.params.id)) { throw "Id not valid" }
+    } catch (e) {
+      return res.status(400).json({error: e});
+    }
+    try {
+      let event = await eventData.get(req.params.id);
+      if (!event) { throw "event does not exist" }
+      await eventData.remove(req.params.id);
+      return res.json({id: req.params.id, deleted: true});
+    } catch (e) {
+      return res.status(404).json({error: e});
+    }
+  })
 
-router.route('/marvelcharacter/:id').get(async (req, res) => {
-  //code here for GET a single character
-  try
-  {
-    let url = req.url.split('/');
-    let id = url[2];
-    let singleData = await characterData.searchCharacterById(id);
-    if(singleData == undefined || singleData.length < 1)
-      throw "Error";
-    let imgData = singleData[0]['thumbnail'];
-    let imgPath = imgData.path + '.' + imgData.extension;
-    res.render('characterById', {singleData: singleData,
-                    imgPath: imgPath,
-                    title: singleData[0]['name']});
-  }
-  catch(exception){
-    res.status(404);
-    res.render('error', {hasErrors: true,
-      error: '404 Error: Could not find that character'});
-  }
-});
+  /*
+router
+  .route('/events')
+  .post(async (req, res) => {
+    try {
 
+    }
+  })
+*/
 //export router
 export default router;
