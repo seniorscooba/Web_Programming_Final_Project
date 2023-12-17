@@ -38,9 +38,9 @@ router.route('/').get(async (req, res) => {
   try {
      const context = { 
       title:'Events',
-      isEventPage: (req.session.user) ? true : false,
-      loggedIn:true,
-      events:eventList
+      isEventPage: true,
+      loggedIn: ((req.session.user) ? true : false),
+      events: await eventsData.getAllEvents()
     };
     res.render('events', context);
   } catch (e) {
@@ -48,32 +48,32 @@ router.route('/').get(async (req, res) => {
   }
 });
   
-router
-  .route('/') 
-  .post(async (req, res) => {
-    try {
-      if (req.session.user) {
-        let eventName = validation.checkString(req.body['eventName'], 'event name');
-        let eventDescription = validation.checkString(req.body['eventDescription'], 'event description');
-        let eventLocation = validation.checkString(req.body['eventLocation'], 'event location');
-        let eventDate = validation.checkString(req.body['eventDate'], 'event date');
-        let eventTime = validation.checkString(req.body['eventTime'], 'event time');
-        let user = req.session.user;
-        //console.log("Here")
-        let returnEvent = await createEvent(user._id.toString(), eventName, eventDescription, eventLocation, eventDate, eventTime);
-        res.status(200).render('events', { title: "Events" });
-        //console.log("Here Fortnite")
-        console.log("made it to events")
-        if (!returnEvent) {
-          throw "Failed to insert event!";
-        }
-      }
-    } catch (e) {
-      res.status(500).json({ error: e });
-    }
+// router
+//   .route('/') 
+//   .post(async (req, res) => {
+//     try {
+//       if (req.session.user) {
+//         let eventName = validation.checkString(req.body['eventName'], 'event name');
+//         let eventDescription = validation.checkString(req.body['eventDescription'], 'event description');
+//         let eventLocation = validation.checkString(req.body['eventLocation'], 'event location');
+//         let eventDate = validation.checkString(req.body['eventDate'], 'event date');
+//         let eventTime = validation.checkString(req.body['eventTime'], 'event time');
+//         let user = req.session.user;
+//         //console.log("Here")
+//         let returnEvent = await createEvent(user._id.toString(), eventName, eventDescription, eventLocation, eventDate, eventTime);
+//         res.status(200).render('events', { title: "Events" });
+//         //console.log("Here Fortnite")
+//         console.log("made it to events")
+//         if (!returnEvent) {
+//           throw "Failed to insert event!";
+//         }
+//       }
+//     } catch (e) {
+//       res.status(500).json({ error: e });
+//     }
 
 
-  });
+//   });
 
 
 router.route('/events/addAttendee/:eventId').post(async (req, res) => {
