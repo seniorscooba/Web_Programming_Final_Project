@@ -10,6 +10,7 @@ You should have a main element, and inside of the main element have a p element 
 Also inside the main element, you will have a form; this form will POST to /searchmarvelcharacters. This form will have an input and a label; You will give the input and name AND id of "searchCharacterByName".  The label should properly reference the same id as the input. You should also have a input with a type of submit that submits the form. 
  -->
  <article class="events">
+<!--
   <h1 class="events-page-header">Events Page</h1>
   {{#if loggedIn}}
   <form action="/events" method="POST" class="events-form" id="events-form">
@@ -45,8 +46,56 @@ Also inside the main element, you will have a form; this form will POST to /sear
     <button type="submit" id="post-submit" class="btnClass">Create event</button>
   </form>
 
-  {{/if}}
+  {{/if}} -->
 
+  <h1 class="home-search-header">Events Page</h1>
+
+  <h1>Create Event</h1>
+  <form action="/events" method="POST" class="event-form" id="event-form">
+    <div class="form-group">
+      <label for="eventName">Event Name:</label>
+      <input type="text" id="eventName" name="eventName" class="form-control" placeholder="Event Name"
+          value="{{eventName}}" required>
+      <br>
+      <label for="eventDescription">{{eventDescription}}</label>
+      <textarea id="eventDescription" name="eventDescription" cols="50" rows="5" required></textarea>
+      <br>
+      <label for="eventLocation">Event Location:</label>
+      <input type="text" id="eventLocation" name="eventLocation" class="form-control" placeholder="Event Location"
+          value="{{eventLocation}}" required>
+      <br>
+      <label for="eventTime">Event Time:</label>
+      <input type="text" id="eventTime" name="eventTime" class="form-control" placeholder="Event Time"
+          value="{{eventTime}}" required>
+      <br>
+      <label for="eventDate">Event Date:</label>
+      <input type="text" id="eventDate" name="eventDate" class="form-control" placeholder="Event Date"
+          value="{{eventDate}}" required>
+      <br>
+      <div class="form-group hidden" id="error-container">
+      <p class="alert alert-danger text-goes-here">
+      </p>
+      <button type="submit" id="event-submit" class="btnClass">Create Event</button>
+    </div>
+    
+  </form>
+
+
+  <div class="form-group hidden" id="event-container">
+      <ol id="event-list"> 
+        {{#each events}}  
+        <div>
+          <h2>{{eventName}}</h2>
+          <p>{{eventDescription}}</p>
+          <h3>{{eventLocation}}</h3>
+          <h3>{{eventTime}}</h3>
+          <h3>{{eventDate}}</h3>
+        </div>
+        {{/each}}
+      </ol>
+  </div> 
+
+<!--
   <div class="form-group hidden" id="events-container">
       <ul id="event-list">
         {{#each events}}  
@@ -63,4 +112,5 @@ Also inside the main element, you will have a form; this form will POST to /sear
         {{/each}}
         </ul>      
   </div> 
+  -->
 </article>
