@@ -52,6 +52,20 @@ export const get = async (postId) => {
     return post;
 };
 
+export const update = async (post) => {
+    let postId = validation.checkId(post._id.toString());
+    // validate post exists
+    const postsCollection = await posts();
+    const updateInfo = await postsCollection.findOneAndUpdate(
+    {_id: new ObjectId(post._id)},
+    {$set: post},
+    {returnDocument: 'after'}
+  );
+  if (!updateInfo)
+    throw `Error: Update failed, could not find a event with id of ${id}`;
+  return updateInfo;
+}
+
 export const getFrequencyBreakdown = async (postContent) => {
     //let id = postContent.id;
     //let content = postContent.body;

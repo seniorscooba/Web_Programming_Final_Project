@@ -8,16 +8,17 @@
     <link rel="stylesheet" href="/public/css/site.css">
 </head>
 <body>
-    <div id="navigation-bar">
+    <nav id="navigation-bar">
       <a class="home-anchor" href="/posts">Posts Page</a>
       <a class="home-anchor" href="/events">Events Page</a>
-        </form>
-        {{#if loggedIn}}
-            <a class="logout-anchor" href="/user/logout">Logout Page</a>   
-        {{else}}           
-            <a class="home-anchor" href="/user/login">Login Page</a> 
-        {{/if}}   
-    </div>
+              <a class="home-anchor" href="/user/login">Login Page</a> 
+
+        <a class="logout-anchor" href="/user/logout">Logout Page</a>  
+    <!--    {{#if loggedIn}} -->
+
+     <!--   {{else}}     -->          
+    <!--    {{/if}}   -->
+    </nav>
 
     <main>
         {{{body}}}
@@ -27,7 +28,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
         crossorigin="anonymous"></script>
-    {{!-- <script src="/public/js/client_side_validation.js"></script>  --}}
+    <script src="/public/js/form.js"></script>
 </body>
 
 </html>

@@ -24,10 +24,24 @@
   <div class="form-group hidden" id="posts-container">
       <ul id="post-list">
         {{#each posts}}  
-        <div>
-          <h2>{{postTitle}}</h2>
-          <p>{{postContent}}</p>
+        <div id="{{_id}}" class="post" name="post:{{_id}}">
+          <label>Post ID: {{_id}}</label>
+          <br />
+          <label>Username: {{userName}}</label>
+          <br />
+          <label>UserId: {{userId}}</label>
+          <br />
+          <label>Created: {{postDate}}</label>
+          <br />
+          <h4>Title: {{postTitle}}</h4>
+          <p>Content: {{postContent}}</p>
+          <input type="checkbox" id="upvoteInput{{_id}}" name="upvoteInput{{_id}}" class="upvote-checkbox"/>
+          <label for="upvoteInput">Upvote</label>       
+          <label for="upvoteCount"> | Upvote Count {{postUpvotes.length}}</label>
+          <label id="post-upvotes" >{{postUpvotes}}</label>
         </div>
+        <br/>
+        <hr/>
         {{/each}}
         </ul>      
   </div> 
