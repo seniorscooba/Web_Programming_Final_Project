@@ -1,25 +1,24 @@
-<!-- 
-This handlebar file will be rendered when the following route is hit: GET http://localhost:3000/
- 
- The title of the document should be "Marvel Character Finder". You should have the title set as the <title> element of the HTML document and as an h1 in your document.
-
-Your page should reference a CSS file, /public/site.css; this file should have at least 10 rulesets you must use at least 5 of them on this page. 
-
-You should have a main element, and inside of the main element have a p element with a brief (2-3 sentence description) of what your website does.
-
-Also inside the main element, you will have a form; this form will POST to /searchmarvelcharacters. This form will have an input and a label; You will give the input and name AND id of "searchCharacterByName".  The label should properly reference the same id as the input. You should also have a input with a type of submit that submits the form. 
- -->
- <article class="events">
+<article class="events">
   <h1 class="home-search-header">Events Page</h1>
 
+
+
+  <form autocomplete="off" action="/action_page.php">
+      <div class="autocomplete" style="width:300px;">
+        <input id="eventSearchInput" type="text" name="eventSearchInput" placeholder="Event name">
+      </div>
+      <input type="submit">
+    </form>
+
   {{#if loggedIn}}
-  <h1 class="event-form">Create Event</h1>
+  <h1>Create Event</h1>
   <form action="/events" method="POST" class="event-form" id="event-form">
     <div>
       <label for="eventName">Event Name:</label>
       <input type="text" id="eventName" name="eventName" class="form-control" placeholder="Event Name"
           value="{{eventName}}" required>
       <br>
+
       <label for="eventDescription">Event Description:</label>
       <input type="text" id="eventDescription" name="eventDescription" placeholder="Event Description" 
           value="{{eventDescription}}" required>
@@ -49,9 +48,11 @@ Also inside the main element, you will have a form; this form will POST to /sear
   </form>
   {{/if}}
 
+
   <div class="form-group hidden" id="event-container">
       <ol id="event-list"> 
         {{#each events}}  
+
         <div id="{{_id}}" class="event" name="event:{{_id}}">
           <label>Event: {{eventName}}</label>
           <br />

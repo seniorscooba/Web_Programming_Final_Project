@@ -37,6 +37,34 @@ export const createPost = async (
     }
 };
 
+export const createPostComment = async (postId, userId, comment) => {
+    postId = validation.checkId(postId, "Post Id");
+    comment = validation.checkString(comment, "Comment");
+    userId = validation.checkId(userId, "User id");
+      
+    const postForComment = await get(postId);
+  
+    if(postForComment)
+    {
+      let newCommentId = new ObjectId();
+      const newComment = {
+        _id: newCommentId,
+        content: comment,
+        userId: userId,
+        createDate: new Date()
+      };
+      
+      postForComment.postComments.push(newComment);
+      const postCollection = await posts();
+      const newInsertInformation = await postCollection.findOneAndUpdate(
+        {_id: new ObjectId(postId)},
+        {$set: postForComment},
+        {returnDocument: 'after'}
+      );
+      return postForComment;
+    }
+};
+
 export const getAllPosts = async () => {
     const postCollection = await posts();
     const postList = await postCollection.find({}).toArray();
@@ -51,6 +79,20 @@ export const get = async (postId) => {
     if (!post) throw 'Error: Post not found';
     return post;
 };
+
+export const update = async (post) => {
+    let postId = validation.checkId(post._id.toString());
+    // validate post exists
+    const postsCollection = await posts();
+    const updateInfo = await postsCollection.findOneAndUpdate(
+    {_id: new ObjectId(post._id)},
+    {$set: post},
+    {returnDocument: 'after'}
+  );
+  if (!updateInfo)
+    throw `Error: Update failed, could not find a event with id of ${id}`;
+  return updateInfo;
+}
 
 export const getFrequencyBreakdown = async (postContent) => {
     //let id = postContent.id;

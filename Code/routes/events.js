@@ -9,18 +9,19 @@ import { createEvent } from '../data/events.js';
 router.route('/').get(async (req, res) => {
   //code here for GET will render the home handlebars file
   try {
+
     if (req.session.user) {
       const eventList = await eventsData.getAllEvents();
       res.render('events', { title:'Events', 
                             loggedIn:true,
                             events:eventList});
     }
-      else
-        res.render('events', { title:'Events', loggedIn:false });
   } catch (e) {
-    res.status(500).json({error: e});
+    console.error(e);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
   
 router
   .route('/') 
@@ -46,6 +47,10 @@ router
     }
   });
 
+
+
+
+
   router.route('/:id').get(async (req, res) => { // update checkbox
     try {
     } catch (e) {
@@ -55,6 +60,7 @@ router
   
   router.route('/:id').post(async (req, res) => { // update checkbox
     try {
+
       if (req.session.user) {
         let url = req.url.split('/');
         let id = url[1];

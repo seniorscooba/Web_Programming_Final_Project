@@ -33,12 +33,12 @@ export const createEvent = async (
   eventName = validation.checkString(eventName, "event name")
   eventDescription = validation.checkString(eventDescription, "event description")
   eventLocation = validation.checkString(eventLocation, "event location")
-  eventDate = validation.checkString(eventDate, "event date")
-  eventTime = validation.checkString(eventTime, "event time")
+  eventDate = validation.checkDate(eventDate, "event date")
+  eventTime = validation.checkTime(eventTime, "event time")
 
   let eventCollection = await events();
   let newEvent = {
-    _id : new ObjectId(),
+    eventId : new ObjectId(),
     user : userId,
     eventName : eventName,
     description : eventDescription,
@@ -53,7 +53,7 @@ export const createEvent = async (
   let newId = insert.insertedId.toString();
   let event = await get(newId);
   event._id = newId.toString();
-  return event
+  return await get(insertionStatus.insertedId.toString());
 };
 
 
@@ -88,6 +88,7 @@ export const rename = async (id, newEventName) => {
   return updated;
 };
 
+
 export const update = async (event) => {
   let eventId = validation.checkId(event._id.toString());
   // validate post exists
@@ -101,3 +102,4 @@ if (!updateInfo)
   throw `Error: Update failed, could not find a event with id of ${eventId}`;
 return updateInfo;
 }
+

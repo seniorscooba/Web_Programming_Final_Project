@@ -84,6 +84,25 @@ const exportedMethods = {
     }
   },
 
+  checkTime(time) {
+    if (!time.includes(':')) { throw "Time is not formatted correctly" }
+    let regex = new RegExp(/^(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/i);
+        // time regex from https://www.geeksforgeeks.org/how-to-validate-time-in-12-hour-format-using-regular-expression/
+    //if (regex.test(time) != true) { throw "Time is invalid format" }
+    return time;
+  },
+
+  checkDate(date) {
+    // valid format is MM/DD/YYYY
+    if (!date.includes('/')) { throw "Date is not formatted correctly" }
+    let currentDate = Date();
+    let inputDate = Date(date);
+    let regex = new RegExp(/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/);
+    if (inputDate < currentDate) { throw "Date must be after the current date" }
+    if (regex.test(date) != true) { throw "Date is invald format" }
+    return date;
+  },
+
   isValidTopDomain(topDomain) {
     return (UPPERCASE_TOP_LEVEL_DOMAIN_LIST.includes(topDomain.toUpperCase())) ? true : false;
   },
