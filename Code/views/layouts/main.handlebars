@@ -1,33 +1,41 @@
 {{! This will be your default layout for all handlebars file rendered. This will be inherited by all other templates. }}
-{{! Refer lecture code to learn more on how this works: https://github.com/stevens-cs546-cs554/CS-546/tree/master/lecture_08/code/HTML_Templating }}
+{{! Refer lecture code to learn more on how this works:
+https://github.com/stevens-cs546-cs554/CS-546/tree/master/lecture_08/code/HTML_Templating }}
 <!DOCTYPE html>
 <html lang="en">
- <head>
+
+<head>
     <meta charset="utf-8">
     <title>{{title}}</title>
     <link rel="stylesheet" href="/public/css/site.css">
 </head>
+
 <body>
-    <div id="navigation-bar">
+    <nav id="navigation-bar">
       <a class="home-anchor" href="/posts">Posts Page</a>
       <a class="home-anchor" href="/events">Events Page</a>
-        </form>
-        {{#if loggedIn}}
-            <a class="logout-anchor" href="/user/logout">Logout Page</a>   
-        {{else}}           
-            <a class="home-anchor" href="/user/login">Login Page</a> 
-        {{/if}}   
-    </div>
+              <a class="home-anchor" href="/user/login">Login Page</a> 
+
+        <a class="logout-anchor" href="/user/logout">Logout Page</a>  
+    <!--    {{#if loggedIn}} -->
+
+     <!--   {{else}}     -->          
+    <!--    {{/if}}   -->
+    </nav>
 
     <main>
         {{{body}}}
-    </main>  
+    </main>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"
         integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
         crossorigin="anonymous"></script>
     {{!-- <script src="/public/js/client_side_validation.js"></script>  --}}
+    <script src="/public/js/form.js"></script>
+    {{#if isEventPage}}
+    <script src="../public/js/vendor/event_autocomplete.js"></script>
+    {{/if}}
 </body>
 
 </html>

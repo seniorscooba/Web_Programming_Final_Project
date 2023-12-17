@@ -24,10 +24,42 @@
   <div class="form-group hidden" id="posts-container">
       <ul id="post-list">
         {{#each posts}}  
-        <div>
-          <h2>{{postTitle}}</h2>
-          <p>{{postContent}}</p>
+        <div id="{{_id}}" class="post" name="post:{{_id}}">
+          <label>Post ID: {{_id}}</label>
+          <br />
+          <label>Username: {{userName}}</label>
+          <br />
+          <label>UserId: {{userId}}</label>
+          <br />
+          <label>Created: {{postDate}}</label>
+          <br />
+          <h3>Title: {{postTitle}}</h3>
+          <p>Content: {{postContent}}</p>
+          <input type="checkbox" id="upvoteInput{{_id}}" name="upvoteInput{{_id}}" class="upvote-checkbox"/>
+          <label for="upvoteInput">Upvote</label>       
+          <label for="upvoteCount"> | Upvote Count {{postUpvotes.length}}</label>
+          <label id="post-upvotes" >{{postUpvotes}}</label>
+          <form action="/posts/{{_id}}/comments/{{userId}}" method="POST" class="post-form" id="post-comment-form">
+            <div class="form-group">
+              <input hidden name="userIdLabel" id="userIdLabel" value="{{userId}}">User ID: {{userId}}</label>
+              <label for="postCommentInput">Post Comment:</label>
+              <textarea name="postCommentInput" cols="50" rows="10">{{body}}</textarea>
+            </div>
+            <button type="submit" id="post-comment-submit" class="btnClass">Submit Comment</button>
+          </form>
+          
+          <h4>Comments:</h4>
+          <ul>
+            {{#each postComments}}
+            <label>UserID: {{userId}}</label>
+            <br/>
+            <label>Commented On: {{createDate}}</label></lavel>
+            <p>{{content}}</p>
+            {{/each}}
+          </ul>
         </div>
+        <br/>
+        <hr/>
         {{/each}}
         </ul>      
   </div> 

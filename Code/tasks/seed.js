@@ -43,9 +43,16 @@ try {
         "Zach's Birthday Bash",
         "Come one come all, celebrate my 22nd birthday party",
         "15 fortnite street, hollywood blvd",
-        "3:00PM",
-        "April 5, 2024"
+        "April 5, 2024",
+        "3:00PM"
     )
+    event2 = await events.createEvent(
+      "Amateur Open-Mic!!!",
+      "Come perform or spectate amongst other artists!",
+      "123 Coffee Drive, Caffeine, California",
+      "April 5, 2024",
+      "3:00PM"
+  )
     console.log(event1)
 } catch(e) {
     console.log(e)
