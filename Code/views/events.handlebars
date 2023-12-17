@@ -1,6 +1,8 @@
 <article class="events">
   <h1 class="home-search-header">Events Page</h1>
-  
+
+
+
   <form autocomplete="off" action="/action_page.php">
       <div class="autocomplete" style="width:300px;">
         <input id="eventSearchInput" type="text" name="eventSearchInput" placeholder="Event name">
@@ -11,26 +13,32 @@
   {{#if loggedIn}}
   <h1>Create Event</h1>
   <form action="/events" method="POST" class="event-form" id="event-form">
-    <div class="form-group">
+    <div>
       <label for="eventName">Event Name:</label>
       <input type="text" id="eventName" name="eventName" class="form-control" placeholder="Event Name"
           value="{{eventName}}" required>
       <br>
-      <label for="eventDescription">Event Description</label>
-      <input type="text" id="eventDescription" name="eventDescription" cols="50" rows="5" value="{{eventDescription}}" required>
+
+      <label for="eventDescription">Event Description:</label>
+      <input type="text" id="eventDescription" name="eventDescription" placeholder="Event Description" 
+          value="{{eventDescription}}" required>
       <br>
       <label for="eventLocation">Event Location:</label>
       <input type="text" id="eventLocation" name="eventLocation" class="form-control" placeholder="Event Location"
           value="{{eventLocation}}" required>
       <br>
       <label for="eventTime">Event Time:</label>
-      <input type="text" id="eventTime" name="eventTime" class="form-control" placeholder="Event Time"
+      <input type="text" id="eventTime" name="eventTime" class="form-control" placeholder="HH:MM AM/PM"
           value="{{eventTime}}" required>
       <br>
       <label for="eventDate">Event Date:</label>
-      <input type="text" id="eventDate" name="eventDate" class="form-control" placeholder="Event Date"
+      <input type="text" id="eventDate" name="eventDate" class="form-control" placeholder="MM/DD/YYYY"
           value="{{eventDate}}" required>
       <br>
+      <label for="eventImg">Event Image (Optional):</label>
+      <form action="/action_page.php">
+        <input type="file" id="image-input" accept="image/png, image/jpg, image/jpeg">
+      </form>
       <div class="form-group hidden" id="error-container">
       <p class="alert alert-danger text-goes-here">
       </p>
@@ -44,20 +52,32 @@
   <div class="form-group hidden" id="event-container">
       <ol id="event-list"> 
         {{#each events}}  
-        <div class="event-display">
-          <h3>{{eventName}}</h3>
-          <b>{{eventDescription}}</b>
-          <b>{{eventLocation}}</b>
-          <b>{{eventTime}}</b>
-          <b>{{eventDate}}</b>
-          <b>{{attendeeList}}</b>
-          <form action="/events/addAttendee/{{this._id}}" method="POST" class="attendEvent" id="attendEvent">
-            <label id="attendEvent" name="attendEvent">Attend Event:</label>
-            <input type="checkbox" id="attendEvent" name="attendEvent" value="{{attend}}">
-          </form>
+
+        <div id="{{_id}}" class="event" name="event:{{_id}}">
+          <label>Event: {{eventName}}</label>
+          <br />
+          <label>User: {{user}}</label>
+          <br />
+          <label>Description: {{eventDescription}}</label>
+          <br />
+          <label>Location: {{eventLocation}}</label>
+          <br />
+          <label>Time: {{eventTime}}</label>
+          <br />
+          <label>Date: {{eventDate}}</label>
+          <br />
+          <div id="event-img"></div>
+          <br />
+          <input type="checkbox" id="attendEvent{{_id}}" name="attendEvent{{_id}}" class="attend-checkbox"/>
+          <label for="attendEvent">Attend Event?</label>       
+          <label id="attendEvent"> | Attendees: {{attendeeList}}</label>
+          <br />
         </div>
         {{/each}}
       </ol>
   </div> 
+
+  <script>'./public/js/img.js'</script>
+
 
 </article>

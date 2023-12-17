@@ -5,14 +5,10 @@ import {ObjectId} from 'mongodb'
 
 // get event by id
 export const get = async (id) => {
-  if (!id) { throw "Id must exist" }
-  if (typeof id != 'string') { throw "Id must be of type string" }
-  if (id.trim().length === 0) { throw "Id cannot be an empty string" }
-  if (!ObjectId.isValid(id)) { throw " Id is not a valid object" }
-  let eventCol = await events();
-  let event = await eventCol.findOne({_id: new ObjectId(id)});
-  if (event == null) { throw "No event with this Id" }
-  event._id = event._id.toString();
+  let eventId = validation.checkId(id);
+  const eventCollection = await events();
+  const event = await eventCollection.findOne({_id: new ObjectId(eventId)});
+  if (!event) throw 'Error: event not found';
   return event;
 };
 
@@ -93,19 +89,17 @@ export const rename = async (id, newEventName) => {
 };
 
 
-export const updateAttendee = async (eventId, user, check) => {
-  const event = await eventCollection.getById(eventId);
-  if (!event) { throw "event not found" }
-  if (check) {
-    event.attendeeList.push(user);
-  } else {
-    // remove attendee
-    const userIndex = event.attendeeList.findIndex((attendee) => attendee === user);
-    if (userIndex !== -1) {
-      event.attendeeList.splice(userIndex, 1);
-    }
-  }
-  await eventCollection.update(eventId, event);
-  return { message: 'Attendee status updated successfully', event };
+export const update = async (event) => {
+  let eventId = validation.checkId(event._id.toString());
+  // validate post exists
+  const eventCollection = await events();
+  const updateInfo = await eventCollection.findOneAndUpdate(
+  {_id: new ObjectId(event._id)},
+  {$set: event},
+  {returnDocument: 'after'}
+);
+if (!updateInfo)
+  throw `Error: Update failed, could not find a event with id of ${eventId}`;
+return updateInfo;
 }
 
