@@ -12,6 +12,7 @@ Also inside the main element, you will have a form; this form will POST to /sear
  <article class="events">
   <h1 class="home-search-header">Events Page</h1>
 
+  {{#if loggedIn}}
   <h1>Create Event</h1>
   <form action="/events" method="POST" class="event-form" id="event-form">
     <div class="form-group">
@@ -19,8 +20,8 @@ Also inside the main element, you will have a form; this form will POST to /sear
       <input type="text" id="eventName" name="eventName" class="form-control" placeholder="Event Name"
           value="{{eventName}}" required>
       <br>
-      <label for="eventDescription">{{eventDescription}}</label>
-      <textarea id="eventDescription" name="eventDescription" cols="50" rows="5" required></textarea>
+      <label for="eventDescription">Event Description</label>
+      <textarea id="eventDescription" name="eventDescription" cols="50" rows="5" value="{{eventDescription}}" required></textarea>
       <br>
       <label for="eventLocation">Event Location:</label>
       <input type="text" id="eventLocation" name="eventLocation" class="form-control" placeholder="Event Location"
@@ -41,17 +42,21 @@ Also inside the main element, you will have a form; this form will POST to /sear
     </div>
     
   </form>
+  {{/if}}
 
 
   <div class="form-group hidden" id="event-container">
       <ol id="event-list"> 
         {{#each events}}  
-        <div>
-          <h2>{{eventName}}</h2>
+        <div class="event-display">
+          <h3>{{eventName}}</h3>
           <p>{{eventDescription}}</p>
-          <h3>{{eventLocation}}</h3>
-          <h3>{{eventTime}}</h3>
-          <h3>{{eventDate}}</h3>
+          <p>{{eventLocation}}</p>
+          <p>{{eventTime}}</p>
+          <p>{{eventDate}}</p>
+          <form action="/addAttendee/{{this._id}}" method="POST">
+          <button type="submit">Attend Event</button>
+        </form>
         </div>
         {{/each}}
       </ol>

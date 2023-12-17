@@ -17,14 +17,10 @@ export const get = async (id) => {
 };
 
 // get all events
-export const getAll = async () => {
+export const getAllEvents = async () => {
   let eventCol = await events();
   let eventList = await eventCol.find({}).toArray();
   if (!eventList) { throw "Could not get all events" }
-  if (eventList.length === 0) { return []; }
-  for (let x of eventList) {
-    x._id = x._id.toString();
-  }
   return eventList;
 };
 
@@ -41,12 +37,12 @@ export const createEvent = async (
   eventName = validation.checkString(eventName, "event name")
   eventDescription = validation.checkString(eventDescription, "event description")
   eventLocation = validation.checkString(eventLocation, "event location")
-  eventDate = validation.checkString(eventDate, "event date")
-  eventTime = validation.checkString(eventTime, "event time")
+  eventDate = validation.checkDate(eventDate, "event date")
+  eventTime = validation.checkTime(eventTime, "event time")
 
   let eventCollection = await events();
   let newEvent = {
-    _id : new ObjectId(),
+    eventId : new ObjectId(),
     user : userId,
     eventName : eventName,
     description : eventDescription,
@@ -60,7 +56,7 @@ export const createEvent = async (
   let newId = insert.insertedId.toString();
   let event = await get(newId);
   event._id = newId.toString();
-  return event
+  return await get(insertionStatus.insertedId.toString());
 };
 
 
@@ -95,3 +91,10 @@ export const rename = async (id, newEventName) => {
   return updated;
 };
 
+
+export const addAttendee = async (eventId, user) => {
+  let eventCollection = await events();
+  let eventToUpdate = eventCollection.get(eventId);
+  let updatedList = eventToUpdate.attendeeList.push(user);
+  return updatedList;
+}
