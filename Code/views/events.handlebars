@@ -13,9 +13,9 @@ Also inside the main element, you will have a form; this form will POST to /sear
   <h1 class="home-search-header">Events Page</h1>
 
   {{#if loggedIn}}
-  <h1>Create Event</h1>
+  <h1 class="event-form">Create Event</h1>
   <form action="/events" method="POST" class="event-form" id="event-form">
-    <div class="form-group">
+    <div>
       <label for="eventName">Event Name:</label>
       <input type="text" id="eventName" name="eventName" class="form-control" placeholder="Event Name"
           value="{{eventName}}" required>
@@ -29,13 +29,17 @@ Also inside the main element, you will have a form; this form will POST to /sear
           value="{{eventLocation}}" required>
       <br>
       <label for="eventTime">Event Time:</label>
-      <input type="text" id="eventTime" name="eventTime" class="form-control" placeholder="Event Time"
+      <input type="text" id="eventTime" name="eventTime" class="form-control" placeholder="HH:MM AM/PM"
           value="{{eventTime}}" required>
       <br>
       <label for="eventDate">Event Date:</label>
-      <input type="text" id="eventDate" name="eventDate" class="form-control" placeholder="Event Date"
+      <input type="text" id="eventDate" name="eventDate" class="form-control" placeholder="MM/DD/YYYY"
           value="{{eventDate}}" required>
       <br>
+      <label for="eventImg">Event Image (Optional):</label>
+      <form action="/action_page.php">
+        <input type="file" id="image-input" accept="image/png, image/jpg, image/jpeg">
+      </form>
       <div class="form-group hidden" id="error-container">
       <p class="alert alert-danger text-goes-here">
       </p>
@@ -48,20 +52,31 @@ Also inside the main element, you will have a form; this form will POST to /sear
   <div class="form-group hidden" id="event-container">
       <ol id="event-list"> 
         {{#each events}}  
-        <div>
-          <h3>{{eventName}}</h3>
-          <b>{{eventDescription}}</b>
-          <b>{{eventLocation}}</b>
-          <b>{{eventTime}}</b>
-          <b>{{eventDate}}</b>
-          <b>{{attendeeList}}</b>
+        <div id="{{_id}}" class="event" name="event:{{_id}}">
+          <label>Event: {{eventName}}</label>
+          <br />
+          <label>User: {{user}}</label>
+          <br />
+          <label>Description: {{eventDescription}}</label>
+          <br />
+          <label>Location: {{eventLocation}}</label>
+          <br />
+          <label>Time: {{eventTime}}</label>
+          <br />
+          <label>Date: {{eventDate}}</label>
+          <br />
+          <div id="event-img"></div>
+          <br />
           <input type="checkbox" id="attendEvent{{_id}}" name="attendEvent{{_id}}" class="attend-checkbox"/>
           <label for="attendEvent">Attend Event?</label>       
-          <label id="attendEvent"> | Attendees {{attendeeList}}</label>
+          <label id="attendEvent"> | Attendees: {{attendeeList}}</label>
+          <br />
         </div>
         {{/each}}
       </ol>
   </div> 
+
+  <script>'./public/js/img.js'</script>
 
 
 </article>

@@ -80,7 +80,7 @@ router
           else {
             throw "Failed to add attendee!";
           }
-          res.status(200).render('events', { title: "Events" })
+          res.status(200).redirect('/events');
         }
       }
     } catch (e) {

@@ -94,3 +94,27 @@ div {
 .comic-list-header {
 	text-align: left;
 }
+
+
+
+
+input[type=text] {
+	width: 100%;
+	padding: 12px 20px;
+	margin: 8px 0;
+	box-sizing: border-box;
+  }
+
+.event {
+	border:1px solid black;
+	padding: 8px 0;
+	border-spacing: 10px;
+}
+
+#event-img {
+	width: 300px;
+	height: 200px;
+	border: 1px solid black;
+	background-position: center;
+	background-size: cover;
+}

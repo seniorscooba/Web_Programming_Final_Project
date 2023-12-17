@@ -155,7 +155,7 @@
 
   let elements = document.getElementsByClassName("events");
   let attendees = $('#attendEvent');
-
+  attendees.hide()
 
   //Let's get references to our form elements and the div where the todo's will go
   let eventList = $('#event-list');
@@ -243,6 +243,7 @@
       });
     }
   }   
+
 
 
 })(window.jQuery);
