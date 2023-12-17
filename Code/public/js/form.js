@@ -23,7 +23,13 @@
     let element = elements[elementIndex];
     // get post upvotees for element
     bindEventsToCheckbox(elements[elementIndex]);
+
+    // setup frequency breakdown button listener
+    let freqBtn = document.getElementById(`word-breakdown-btn:${element.id}`);
+    freqBtn.addEventListener("click", wordBreakdownFunction);
   }
+
+
 
   // for(elementIndex in elements){
   //   let element = elements[elementIndex];
@@ -69,7 +75,7 @@
             data: `checked`
           };
           $.ajax(requestConfig).then(function (responseMessage) {
-
+            location.reload();
           });
           requestConfig = {
             method: 'GET',
@@ -77,7 +83,7 @@
             data: `checked`
           };
           $.ajax(requestConfig).then(function (responseMessage) {
-
+            
           });
           
         } else {
@@ -102,6 +108,34 @@
         }
       });
     }
+  }
+
+  function wordBreakdownFunction() {
+    // get content
+    let postContentId = this.id.split(':')[1];
+    let postContentEle = document.getElementById(`post-content:${postContentId}`);
+    let postContent = postContentEle.textContent;
+
+    // perform breakdown
+    // split all words on white space
+    let words = postContent.split(' ');
+    let wordCountMap = {};
+    for(wordIndex in words){
+        let word = words[wordIndex];
+        if(wordCountMap[word])
+            wordCountMap[word]++;
+        else
+            wordCountMap[word] = 1; 
+    }
+
+    // build string for alert
+    let wordStr = 'WORD FREQUENCY BREAKDOWN\n' ;
+    wordStr = wordStr + '----------------------------------------\n' ;
+    for(wordKey in wordCountMap){
+      wordStr = wordStr + `${wordKey} : ${wordCountMap[wordKey]}\n`;
+    }
+    alert(wordStr);
+    return wordCountMap;
   }
 
   const eventForm = document.getElementById('event-form');
@@ -156,4 +190,5 @@
       }
     });
   }
+
 })(window.jQuery);
