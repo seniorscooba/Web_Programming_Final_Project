@@ -59,6 +59,33 @@ app.get('/', (req, res, next) => {
   }
 });
 
+app.get('/posts', (req, res, next) => {
+  //req.method = 'GET';
+  //res.originalUrl = '/login';
+
+  if (req.session.user) { // user is authenticated
+    let log = `${new Date().toUTCString()}: ${req.method}: ${req.originalUrl} (Authenticated)`;
+    console.log(log);
+  } else {
+    let log = `${new Date().toUTCString()}: ${req.method}: ${req.originalUrl} (NOT Authenticated)`;
+  }
+  next();
+});
+
+
+app.get('/events', (req, res, next) => {
+  //req.method = 'GET';
+  //res.originalUrl = '/login';
+
+  if (req.session.user) { // user is authenticated
+    let log = `${new Date().toUTCString()}: ${req.method}: ${req.originalUrl} (Authenticated)`;
+    console.log(log);
+  } else {
+    let log = `${new Date().toUTCString()}: ${req.method}: ${req.originalUrl} (NOT Authenticated)`;
+  }
+  next();
+});
+
 /*
 
 2. This middleware will only be used for the GET /login route and will do one of the following: If the user is authenticated AND they have a role of admin, the middleware function will redirect them to the /admin route, if the user is authenticated AND they have a role of user, you will redirect them to the /protected route. If the user is NOT authenticated, you will allow them to get through to the GET /login route. A logged in user should never be able to access the login form.

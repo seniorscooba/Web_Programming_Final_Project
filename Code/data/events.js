@@ -30,12 +30,14 @@ export const getAll = async () => {
 
 // create event
 export const createEvent = async (
+  userId,
   eventName, 
   eventDescription,
   eventLocation,
   eventDate,
   eventTime
 ) => {
+  userId = validation.checkId(userId, "user id")
   eventName = validation.checkString(eventName, "event name")
   eventDescription = validation.checkString(eventDescription, "event description")
   eventLocation = validation.checkString(eventLocation, "event location")
@@ -45,6 +47,7 @@ export const createEvent = async (
   let eventCollection = await events();
   let newEvent = {
     _id : new ObjectId(),
+    user : userId,
     eventName : eventName,
     description : eventDescription,
     eventLocation : eventLocation,

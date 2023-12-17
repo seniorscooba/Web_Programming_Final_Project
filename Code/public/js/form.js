@@ -98,4 +98,59 @@
       }
     });
   }
+
+  const eventForm = document.getElementById('event-form');
+  if (eventForm) {
+    // We can store references to our elements; it's better to
+    // store them once rather than re-query the DOM traversal each time
+    // that the event runs.
+    const firstNumberElement = document.getElementById('number1');
+    const secondNumberElement = document.getElementById('number2');
+    const operationElement = document.getElementById('operation');
+
+    const errorContainer = document.getElementById('error-container');
+    const errorTextElement =
+      errorContainer.getElementsByClassName('text-goes-here')[0];
+
+    const resultContainer = document.getElementById('result-container');
+    const resultTextElement =
+      resultContainer.getElementsByClassName('text-goes-here')[0];
+
+    // We can take advantage of functional scoping; our event listener has access to its outer functional scope
+    // This means that these variables are accessible in our callback
+    staticForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      try {
+        // hide containers by default
+        errorContainer.classList.add('hidden');
+        resultContainer.classList.add('hidden');
+
+        // Values come from inputs as strings, no matter what :(
+        const firstNumberValue = firstNumberElement.value;
+        const secondNumberValue = secondNumberElement.value;
+        const operationValue = operationElement.value;
+        console.log(typeof firstNumberValue);
+        const parsedFirstNumberValue = parseInt(firstNumberValue);
+        console.log(typeof parsedFirstNumberValue);
+        const parsedSecondNumberValue = parseInt(secondNumberValue);
+        const operation = operationStringToFunction(operationValue);
+
+        const result = operation(
+          parsedFirstNumberValue,
+          parsedSecondNumberValue
+        );
+
+        resultTextElement.textContent = 'The result is ' + result;
+        console.log(`${result}`);
+        resultContainer.classList.remove('hidden');
+      } catch (e) {
+        const message = typeof e === 'string' ? e : e.message;
+        errorTextElement.textContent = e;
+        errorContainer.classList.remove('hidden');
+      }
+    });
+  }
+
+
 })();
