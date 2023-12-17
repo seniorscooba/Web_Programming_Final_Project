@@ -37,12 +37,12 @@ router
         let user = req.session.user;
         //console.log("Here")
         let returnEvent = await createEvent(user._id.toString(), eventName, eventDescription, eventLocation, eventDate, eventTime);
+        res.status(200).render('events', { title: "Events" });
         //console.log("Here Fortnite")
         console.log("made it to events")
         if (!returnEvent) {
           throw "Failed to insert event!";
         }
-        res.status(200).render('events', { title: "Events" });
       }
     } catch (e) {
       res.status(500).json({ error: e });
@@ -52,16 +52,35 @@ router
   });
 
 
-router.route('/addAttendee/:eventId').post(async (req, res) => {
+router.route('/events/addAttendee/:eventId').post(async (req, res) => {
+  console.log("here!")
   try {
-    const eventId = req.params.eventId;
-    const result = await eventsData.addAttendee(eventId, req.session.user)
-    res.json(result);
-  } catch (error) {
-    console.error(error);
+    if (req.session.user) {
+      const eventId = req.body['_id']
+      const isChecked = req.body['attend'];
+      const result = await eventsData.updateAttendee(eventId, req.session.user, isChecked)
+      console.log('here')
+      res.status(200).render('events', { title: "Events", attendeeList : result })
+    }
+  } catch (e) {
+    console.error(e);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 router
   .route('/events')

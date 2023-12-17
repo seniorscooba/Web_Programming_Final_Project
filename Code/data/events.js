@@ -49,7 +49,8 @@ export const createEvent = async (
     eventLocation : eventLocation,
     eventTime : eventTime,
     eventDate : eventDate,
-    attendeeList : []
+    attendeeList : [],
+    attend : false
   }
   let insert = await eventCollection.insertOne(newEvent)
   if (!insert.acknowledged || !insert.insertedId) { throw "Could not add event" }
@@ -92,9 +93,19 @@ export const rename = async (id, newEventName) => {
 };
 
 
-export const addAttendee = async (eventId, user) => {
-  let eventCollection = await events();
-  let eventToUpdate = eventCollection.get(eventId);
-  let updatedList = eventToUpdate.attendeeList.push(user);
-  return updatedList;
+export const updateAttendee = async (eventId, user, check) => {
+  const event = await eventCollection.getById(eventId);
+  if (!event) { throw "event not found" }
+  if (check) {
+    event.attendeeList.push(user);
+  } else {
+    // remove attendee
+    const userIndex = event.attendeeList.findIndex((attendee) => attendee === user);
+    if (userIndex !== -1) {
+      event.attendeeList.splice(userIndex, 1);
+    }
+  }
+  await eventCollection.update(eventId, event);
+  return { message: 'Attendee status updated successfully', event };
 }
+

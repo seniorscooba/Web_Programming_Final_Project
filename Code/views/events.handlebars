@@ -21,7 +21,7 @@ Also inside the main element, you will have a form; this form will POST to /sear
           value="{{eventName}}" required>
       <br>
       <label for="eventDescription">Event Description</label>
-      <textarea id="eventDescription" name="eventDescription" cols="50" rows="5" value="{{eventDescription}}" required></textarea>
+      <input type="text" id="eventDescription" name="eventDescription" cols="50" rows="5" value="{{eventDescription}}" required>
       <br>
       <label for="eventLocation">Event Location:</label>
       <input type="text" id="eventLocation" name="eventLocation" class="form-control" placeholder="Event Location"
@@ -50,13 +50,15 @@ Also inside the main element, you will have a form; this form will POST to /sear
         {{#each events}}  
         <div class="event-display">
           <h3>{{eventName}}</h3>
-          <p>{{eventDescription}}</p>
-          <p>{{eventLocation}}</p>
-          <p>{{eventTime}}</p>
-          <p>{{eventDate}}</p>
-          <form action="/addAttendee/{{this._id}}" method="POST">
-          <button type="submit">Attend Event</button>
-        </form>
+          <b>{{eventDescription}}</b>
+          <b>{{eventLocation}}</b>
+          <b>{{eventTime}}</b>
+          <b>{{eventDate}}</b>
+          <b>{{attendeeList}}</b>
+          <form action="/events/addAttendee/{{this._id}}" method="POST" class="attendEvent" id="attendEvent">
+            <label id="attendEvent" name="attendEvent">Attend Event:</label>
+            <input type="checkbox" id="attendEvent" name="attendEvent" value="{{attend}}">
+          </form>
         </div>
         {{/each}}
       </ol>
