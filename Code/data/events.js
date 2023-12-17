@@ -5,26 +5,18 @@ import {ObjectId} from 'mongodb'
 
 // get event by id
 export const get = async (id) => {
-  if (!id) { throw "Id must exist" }
-  if (typeof id != 'string') { throw "Id must be of type string" }
-  if (id.trim().length === 0) { throw "Id cannot be an empty string" }
-  if (!ObjectId.isValid(id)) { throw " Id is not a valid object" }
-  let eventCol = await events();
-  let event = await eventCol.findOne({_id: new ObjectId(id)});
-  if (event == null) { throw "No event with this Id" }
-  event._id = event._id.toString();
+  let eventId = validation.checkId(id);
+  const eventCollection = await events();
+  const event = await eventCollection.findOne({_id: new ObjectId(eventId)});
+  if (!event) throw 'Error: event not found';
   return event;
 };
 
 // get all events
-export const getAll = async () => {
+export const getAllEvents = async () => {
   let eventCol = await events();
   let eventList = await eventCol.find({}).toArray();
   if (!eventList) { throw "Could not get all events" }
-  if (eventList.length === 0) { return []; }
-  for (let x of eventList) {
-    x._id = x._id.toString();
-  }
   return eventList;
 };
 
@@ -53,7 +45,8 @@ export const createEvent = async (
     eventLocation : eventLocation,
     eventTime : eventTime,
     eventDate : eventDate,
-    attendeeList : []
+    attendeeList : [],
+    attend : false
   }
   let insert = await eventCollection.insertOne(newEvent)
   if (!insert.acknowledged || !insert.insertedId) { throw "Could not add event" }
@@ -95,3 +88,16 @@ export const rename = async (id, newEventName) => {
   return updated;
 };
 
+export const update = async (event) => {
+  let eventId = validation.checkId(event._id.toString());
+  // validate post exists
+  const eventCollection = await events();
+  const updateInfo = await eventCollection.findOneAndUpdate(
+  {_id: new ObjectId(event._id)},
+  {$set: event},
+  {returnDocument: 'after'}
+);
+if (!updateInfo)
+  throw `Error: Update failed, could not find a event with id of ${eventId}`;
+return updateInfo;
+}

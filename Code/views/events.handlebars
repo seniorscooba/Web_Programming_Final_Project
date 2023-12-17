@@ -12,6 +12,7 @@ Also inside the main element, you will have a form; this form will POST to /sear
  <article class="events">
   <h1 class="home-search-header">Events Page</h1>
 
+  {{#if loggedIn}}
   <h1>Create Event</h1>
   <form action="/events" method="POST" class="event-form" id="event-form">
     <div class="form-group">
@@ -19,8 +20,9 @@ Also inside the main element, you will have a form; this form will POST to /sear
       <input type="text" id="eventName" name="eventName" class="form-control" placeholder="Event Name"
           value="{{eventName}}" required>
       <br>
-      <label for="eventDescription">{{eventDescription}}</label>
-      <textarea id="eventDescription" name="eventDescription" cols="50" rows="5" required></textarea>
+      <label for="eventDescription">Event Description:</label>
+      <input type="text" id="eventDescription" name="eventDescription" placeholder="Event Description" 
+          value="{{eventDescription}}" required>
       <br>
       <label for="eventLocation">Event Location:</label>
       <input type="text" id="eventLocation" name="eventLocation" class="form-control" placeholder="Event Location"
@@ -41,17 +43,21 @@ Also inside the main element, you will have a form; this form will POST to /sear
     </div>
     
   </form>
-
+  {{/if}}
 
   <div class="form-group hidden" id="event-container">
       <ol id="event-list"> 
         {{#each events}}  
         <div>
-          <h2>{{eventName}}</h2>
-          <p>{{eventDescription}}</p>
-          <h3>{{eventLocation}}</h3>
-          <h3>{{eventTime}}</h3>
-          <h3>{{eventDate}}</h3>
+          <h3>{{eventName}}</h3>
+          <b>{{eventDescription}}</b>
+          <b>{{eventLocation}}</b>
+          <b>{{eventTime}}</b>
+          <b>{{eventDate}}</b>
+          <b>{{attendeeList}}</b>
+          <input type="checkbox" id="attendEvent{{_id}}" name="attendEvent{{_id}}" class="attend-checkbox"/>
+          <label for="attendEvent">Attend Event?</label>       
+          <label id="attendEvent"> | Attendees {{attendeeList}}</label>
         </div>
         {{/each}}
       </ol>

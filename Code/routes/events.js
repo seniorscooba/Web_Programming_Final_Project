@@ -2,27 +2,15 @@
 import {Router} from 'express';
 const router = Router();
 import validation from '../validation.js';
-import { eventData } from '../data/index.js'
-import { events } from '../config/mongoCollections.js';
+import * as eventsData from '../data//events.js';
 import { createEvent } from '../data/events.js';
 
 
 router.route('/').get(async (req, res) => {
   //code here for GET will render the home handlebars file
   try {
-    res.render('events', { title:'Events' });
-  } catch (e) {
-    res.status(500).json({error: e});
-  }
-});
-
-
-
-router.route('/events').get(async (req, res) => {
-  //code here for GET will render the home handlebars file
-  try {
-    if(req.session.user){
-      const eventList = await events.getAll();
+    if (req.session.user) {
+      const eventList = await eventsData.getAllEvents();
       res.render('events', { title:'Events', 
                             loggedIn:true,
                             events:eventList});
@@ -35,7 +23,7 @@ router.route('/events').get(async (req, res) => {
 });
   
 router
-  .route('/events') 
+  .route('/') 
   .post(async (req, res) => {
     try {
       if (req.session.user) {
@@ -51,44 +39,54 @@ router
         if (!returnEvent) {
           throw "Failed to insert event!";
         }
-        res.status(200).redirect('/events');
+        res.status(200).render('events', { title: "Events" });
       }
     } catch (e) {
       res.status(500).json({ error: e });
     }
-
-
   });
 
-router
-  .route('/events')
-  .delete(async (req, res) => {
+  router.route('/:id').get(async (req, res) => { // update checkbox
     try {
-      if (!ObjectId.isValid(req.params.id)) { throw "Id not valid" }
     } catch (e) {
-      return res.status(400).json({error: e});
+      res.status(500).json({ error: e });
     }
+  });
+  
+  router.route('/:id').post(async (req, res) => { // update checkbox
     try {
-      let event = await eventData.get(req.params.id);
-      if (!event) { throw "event does not exist" }
-      await eventData.remove(req.params.id);
-      return res.json({id: req.params.id, deleted: true});
+      if (req.session.user) {
+        let url = req.url.split('/');
+        let id = url[1];
+        if (req.body) {     
+          let isChecked = req.body['checked'];
+          let isNotChecked = req.body['notChecked'];
+          let event = await eventsData.get(id);
+          let user = req.session.user._id;
+          if (isChecked != undefined) {
+            let found = event.attendeeList.find((x) => x === user);
+            event.attendeeList.push(user);
+            eventsData.update(event)
+          }
+          else if(isNotChecked != undefined){
+            let found = event.attendeeList.find((x) => x === user);
+            if (found) {
+              event.attendeeList = event.attendeeList.filter(function(item) {
+                return item !== user
+              })
+            }
+            eventsData.update(event)
+          }
+          else {
+            throw "Failed to add attendee!";
+          }
+          res.status(200).render('events', { title: "Events" })
+        }
+      }
     } catch (e) {
-      return res.status(404).json({error: e});
+      res.status(500).json({ error: e });
     }
-  })
-
-  /*
-router
-  .route('/events')
-  .post(async (req, res) => {
-    try {
-
-    }
-  })
-*/
-//export router
-
+  });
 
 
 
