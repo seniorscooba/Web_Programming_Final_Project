@@ -10,10 +10,13 @@ import { createEvent } from '../data/events.js';
 router.route('/').get(async (req, res) => {
   //code here for GET will render the home handlebars file
   try {
-    const eventList = await eventData.getAll();
-    res.render('events', { title:'Events',
-                              loggedIn:true,
-                              events:eventList });
+    const context = { 
+      title:'Events',
+      isEventPage: true,
+      loggedIn:true,
+      events:eventList
+    };
+    res.render('events', context);
   } catch (e) {
     res.status(500).json({error: e});
   }
@@ -108,7 +111,7 @@ router
     }
   })
 
-  /*
+/*
 router
   .route('/events')
   .post(async (req, res) => {
