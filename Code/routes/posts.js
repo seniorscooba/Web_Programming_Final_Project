@@ -33,6 +33,41 @@ router.route('/json').get(async (req, res) => {
   }
 });
 
+router.route('/:id/comments/:userId').post(async (req, res) => {
+  //code here for GET will render the home handlebars file
+  if(req.session.user){
+    let newCommentData = req.body['postCommentInput'];
+    let userId = req.body['userIdLabel'];
+    let url = req.url.split('/');
+    let postId = url[1];
+
+    //make sure there is something present in the req.body
+    if (!newCommentData || Object.keys(newCommentData).length === 0) {
+      return res
+        .status(400)
+        .json({error: 'There are no fields in the request body'});
+    }
+    //check all inputs, that should respond with a 400
+    try {
+      postId = validation.checkString(postId, "Post ID");
+      userId = validation.checkString(userId, "User ID");
+      newCommentData = validation.checkString(newCommentData, "Comment");
+  
+      let post = await posts.get(postId);
+
+    }catch (e) {
+      return res.status(400).json({error: e});
+    }
+      //insert the post
+    try {
+      const updatedPost = await posts.createPostComment(postId, userId, newCommentData);
+      res.status(200).redirect('/posts');
+    } catch (e) {
+      res.status(500).json({error: e});
+    }
+}
+});
+
 router.route('/').post(async (req, res) => {
     try {
       if(req.session.user){

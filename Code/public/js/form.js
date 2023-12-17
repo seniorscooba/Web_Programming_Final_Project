@@ -3,18 +3,19 @@
   let elements = document.getElementsByClassName("post");
   let postUpvotes = $('#post-upvotes');
   postUpvotes.hide();
-  let postList = {};
-  let loggedInIdUser = {};
-  let requestConfig = {
-    method: 'GET',
-    url: `${document.URL}/json`,
-    isChecked: true,
-    data: `checked`
-  };
-  $.ajax(requestConfig).then(function (responseMessage) {
-    postList = responseMessage[0];
-    loggedInUser = responseMessage[1];
-  });
+
+  //let postList = {};
+  //let loggedInIdUser = {};
+  // let requestConfig = {
+  //   method: 'GET',
+  //   url: `${document.URL}/json`,
+  //   isChecked: true,
+  //   data: `checked`
+  // };
+  // $.ajax(requestConfig).then(function (responseMessage) {
+  //   postList = responseMessage[0];
+  //   loggedInUser = responseMessage[1];
+  // });
 
   //Let's get references to our form elements and the div where the todo's will go
   let postsList = $('#post-list');
@@ -24,18 +25,18 @@
     bindEventsToCheckbox(elements[elementIndex]);
   }
 
-  for(elementIndex in elements){
-    let element = elements[elementIndex];
-    let checkbox = element.getElementsByClassName("upvote-checkbox")[0];
-    for(post in postList){
-      if(postList[post]._id == element.id){
-        let foundUpvotee = postList[post].postUpvotes.find(x => x === loggedInUser._id);
-        if(foundUpvotee){
-          checkbox.checked = true;
-        }
-      }
-    }
-  }
+  // for(elementIndex in elements){
+  //   let element = elements[elementIndex];
+  //   let checkbox = element.getElementsByClassName("upvote-checkbox")[0];
+  //   for(post in postList){
+  //     if(postList[post]._id == element.id){
+  //       let foundUpvotee = postList[post].postUpvotes.find(x => x === loggedInUser._id);
+  //       if(foundUpvotee){
+  //         checkbox.checked = true;
+  //       }
+  //     }
+  //   }
+  // }
 
   const validateField = (field) =>{
     try{
@@ -70,6 +71,14 @@
           $.ajax(requestConfig).then(function (responseMessage) {
 
           });
+          requestConfig = {
+            method: 'GET',
+            url: `${post.context.URL}`,
+            data: `checked`
+          };
+          $.ajax(requestConfig).then(function (responseMessage) {
+
+          });
           
         } else {
           console.log("Checkbox is not checked..")
@@ -77,6 +86,14 @@
           let requestConfig = {
             method: 'POST',
             url: `${post.context.URL}/${post.id}`,
+            data: `notChecked`
+          };
+          $.ajax(requestConfig).then(function (responseMessage) {
+
+          });
+          requestConfig = {
+            method: 'GET',
+            url: `${post.context.URL}`,
             data: `notChecked`
           };
           $.ajax(requestConfig).then(function (responseMessage) {
