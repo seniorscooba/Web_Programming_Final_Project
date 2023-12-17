@@ -1,9 +1,40 @@
-import { dbConnection, closeConnection } from "../config/mongoConnection.js";
+import {dbConnection, closeConnection} from '../config/mongoConnection.js';
+import * as posts from '../data/posts.js';
 import * as events from '../data/events.js';
 import * as users from '../data/users.js';
 
 const db = await dbConnection();
 await db.dropDatabase();
+
+const user1 = await users.registerUser(
+  'Steve',
+  'Vaz',
+  'stevevaz@gmail.com',
+  'Pass123!',
+  'user'
+);
+
+const user1Id = user1._id.toString();
+const post1 = await posts.createPost(
+  user1Id,
+  user1.userName,
+  "This is a post title",
+  "some seed post data yall"
+);
+const post2 = await posts.createPost(
+  user1Id,
+  user1.userName,
+  "This is a second post",
+  "some seed post data yall"
+);
+const post3 = await posts.createPost(
+  user1Id,
+  user1.userName,
+  "This is a third post",
+  "some seed post data yall"
+);
+//const removed = await attendees.removeAttendee(attendee._id.toString());
+//const deletedInfo = await events.remove(event1Id);
 
 let event1 
 
@@ -36,4 +67,4 @@ try {
 }
 
 
-await closeConnection()
+await closeConnection();

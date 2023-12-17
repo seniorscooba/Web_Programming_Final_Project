@@ -1,16 +1,11 @@
-//You can add and export any helper functions you want here. If you aren't using any, then you can just leave this file as is.
-import {ObjectId} from 'mongodb';
-
-export const ROLE_ADMIN = "admin";
-export const ROLE_USER = "user";
+import { ObjectId } from 'mongodb';
 
 const exportedMethods = {
   checkId(id, varName) {
     if (!id) throw `Error: You must provide a ${varName}`;
     if (typeof id !== 'string') throw `Error:${varName} must be a string`;
     id = id.trim();
-    if (id.length === 0)
-      throw `Error: ${varName} cannot be an empty string or just spaces`;
+    if (id.length === 0) throw `Error: ${varName} cannot be an empty string or just spaces`;
     if (!ObjectId.isValid(id)) throw `Error: ${varName} invalid object ID`;
     return id;
   },
@@ -19,199 +14,139 @@ const exportedMethods = {
     if (!strVal) throw `Error: You must supply a ${varName}!`;
     if (typeof strVal !== 'string') throw `Error: ${varName} must be a string!`;
     strVal = strVal.trim();
-    if (strVal.length === 0)
-      throw `Error: ${varName} cannot be an empty string or string with just spaces`;
-    if (!isNaN(strVal))
-      throw `Error: ${strVal} is not a valid value for ${varName} as it only contains digits`;
+    if (strVal.length === 0) throw `Error: ${varName} cannot be an empty string or string with just spaces`;
+    if (!isNaN(strVal)) throw `Error: ${strVal} is not a valid value for ${varName} as it only contains digits`;
     return strVal;
   },
 
   checkName(strVal, varName) {
     strVal = this.checkString(strVal, varName);
-
-    // should not contain numbers
-    for(let i = 0; i < strVal.length; i++){
-        if(!isNaN(Number(strVal[i])))
-            throw `${varName} = ${strVal} : cannot contain numbers`;
+    for (let i = 0; i < strVal.length; i++) {
+      if (!isNaN(Number(strVal[i]))) throw `${varName} = ${strVal} : cannot contain numbers`;
     }
-
-    // should be at least 2 characters long
-    if(strVal.length < 2)
-        throw `${varName} = ${strVal} : must be longer than two characters`;
-
-    // should be at least 2 characters long
-    if(strVal.length > 25)
-      throw `${varName} = ${strVal} : must be less than 25 characters`;
-
+    if (strVal.length < 2) throw `${varName} = ${strVal} : must be longer than two characters`;
+    if (strVal.length > 25) throw `${varName} = ${strVal} : must be less than 25 characters`;
     return strVal;
   },
 
   checkRole(strVal, varName) {
-    if(strVal === undefined)
-      throw `${varName} must exist`;
-
+    if (strVal === undefined) throw `${varName} must exist`;
     strVal = strVal.trimStart();
     strVal = strVal.trimEnd();
-    if(strVal.includes(" ")) throw "Role cannot contain white spaces";
-
+    if (strVal.includes(" ")) throw "Role cannot contain white spaces";
     strVal = strVal.toLowerCase();
-
-    if(strVal !== ROLE_ADMIN && strVal !== ROLE_USER)
-      throw `Role must be ${ROLE_ADMIN} or ${ROLE_USER}`;
-
+    if (strVal !== ROLE_ADMIN && strVal !== ROLE_USER) throw `Role must be admin or user`;
     return strVal;
   },
 
   checkPassword(strVal, varName) {
-    if(strVal === undefined) throw "Password must exist";
-
-    if(strVal.includes(" ")) throw "Password cannot contain empty space";
-
-    if(strVal < 8) throw "Password must be at least 8 characters long";
-
+    if (strVal === undefined) throw "Password must exist";
+    if (strVal.includes(" ")) throw "Password cannot contain empty space";
+    if (strVal < 8) throw "Password must be at least 8 characters long";
     let upCaseCount = 0;
     let numCount = 0;
     let specCharCount = 0;
-    for(let i = 0; i < strVal.length; i++){
-        let char = strVal[i];
-        
-        // check if uppercase
-        if(char === char.toUpperCase())
-            upCaseCount++;
-
-        // check if num
-        if(!isNaN(Number(char)))
-            numCount++;
-
-        // check if special character
-        if(this.isSpecialCharacter(char))
-            specCharCount++;
+    for (let i = 0; i < strVal.length; i++) {
+      let char = strVal[i];
+      if (char === char.toUpperCase()) upCaseCount++;
+      if (!isNaN(Number(char))) numCount++;
+      if (this.isSpecialCharacter(char)) specCharCount++;
     }
-
-    if(upCaseCount < 1) throw "Password must contain at least one upper case character";
-    if(numCount < 1) throw "Password must contain at least one number";
-    if(specCharCount < 1) throw "Password must contain at least one special character";
-
+    if (upCaseCount < 1) throw "Password must contain at least one upper case character";
+    if (numCount < 1) throw "Password must contain at least one number";
+    if (specCharCount < 1) throw "Password must contain at least one special character";
     return strVal;
   },
 
   /// according to https://knowledge.validity.com/hc/en-us/articles/220560587-What-are-the-rules-for-email-address-syntax-
-// a valid emails address has four parts:
-// Recipient name
-// @ symbol
-// Domain name
-// Top-level domain
- checkEmail (emailAddr) {
-    try
-    {
-        emailAddr = emailAddr.trim().toLowerCase();
-        if(emailAddr === "" || emailAddr === undefined)
-          throw "Email must exist";
-
-        let splitRecipentDomain = emailAddr.split("@");
-        let splitDomain = splitRecipentDomain[1].split(".");
-        let recipient = splitRecipentDomain[0];
-        let domainName = splitDomain[0];
-        let topLevelDomain = splitDomain[1];
-        
-        // check that fields exist
-        if(!(recipient || domainName || topLevelDomain)) throw "Invalid email format";
-
-        // check valid recipient
-        if(!(this.isValidRecipient(recipient))) throw "Invalid email recipient";
-
-        // check valid domain name
-        if(!(this.isValidDomainName(domainName))) throw "Invalid email domain name";
-
-        // check valid top-level domain
-        if(!(this.isValidTopDomain(topLevelDomain))) throw "Invalid email top level domain";
-
-        return emailAddr;
+  // a valid emails address has four parts:
+  // Recipient name
+  // @ symbol
+  // Domain name
+  // Top-level domain
+  checkEmail(emailAddr) {
+    try {
+      emailAddr = emailAddr.trim().toLowerCase();
+      if (emailAddr === "" || emailAddr === undefined) throw "Email must exist";
+      let splitRecipentDomain = emailAddr.split("@");
+      let splitDomain = splitRecipentDomain[1].split(".");
+      let recipient = splitRecipentDomain[0];
+      let domainName = splitDomain[0];
+      let topLevelDomain = splitDomain[1];
+      if (!(recipient || domainName || topLevelDomain)) throw "Invalid email format";
+      if (!(this.isValidRecipient(recipient))) throw "Invalid email recipient";
+      if (!(this.isValidDomainName(domainName))) throw "Invalid email domain name";
+      if (!(this.isValidTopDomain(topLevelDomain))) throw "Invalid email top level domain";
+      return emailAddr;
     }
-    catch(exception){
-        throw "Invalid email";
+    catch (exception) {
+      throw "Invalid email";
     }
-},
+  },
 
- isValidTopDomain (topDomain) {
+  isValidTopDomain(topDomain) {
     return (UPPERCASE_TOP_LEVEL_DOMAIN_LIST.includes(topDomain.toUpperCase())) ? true : false;
-},
+  },
 
- isValidDomainName (domainName) {
-    // Domain names may be a maximum of 253 characters
-    if(!this.hasLessChars(domainName, 254)) return false;
-
-    // Domain names may consist of:
-    // - Uppercase and lowercase letters in English (A-Z, a-z)
-    // - Digits from 0 to 9 
-    // - A hyphen (-)
-    // A period (.)  (used to identify a sub-domain; for example,  email.domainsample)
-    if(!this.hasValidDomainChars(domainName)) return false;
-    
+  isValidDomainName(domainName) {
+    if (!this.hasLessChars(domainName, 254)) return false;
+    if (!this.hasValidDomainChars(domainName)) return false;
     return true;
-},
+  },
 
-hasLessChars (str, charLimit) {
-  return str.trim().length < charLimit ? true : false;
-},
+  hasLessChars(str, charLimit) {
+    return str.trim().length < charLimit ? true : false;
+  },
 
- hasValidDomainChars (domainName) {
-    for(let iter = 0; iter < domainName.length; iter++){
-        let char = domainName[iter];
-        if(!this.isValidDomainChar(char))
-            return false;
+  hasValidDomainChars(domainName) {
+    for (let iter = 0; iter < domainName.length; iter++) {
+      let char = domainName[iter];
+      if (!this.isValidDomainChar(char))
+        return false;
     }
     return true;
-},
+  },
 
- isValidDomainChar (char) {
-    if(this.isLetter(char)) return true;
-    if(typeof(Number(char)) == "number") return true;
-    if(char === "-" || char === ".") return true;
-
+  isValidDomainChar(char) {
+    if (this.isLetter(char)) return true;
+    if (typeof (Number(char)) == "number") return true;
+    if (char === "-" || char === ".") return true;
     return false;
-},
+  },
 
- isValidRecipient (recipient) {
-    // The recipient name may be a maximum of 64 characters long and consist of:
-    if(!this.hasLessChars(recipient, 65)) return false;
-
-    // A special character cannot appear as the first or last character in an email address 
-    if(this.isSpecialCharacter(recipient[0]) || this.isSpecialCharacter(recipient[recipient.length - 1])) return false;
-
-    // A special character cannot appear appear consecutively two or more times in an email address 
-    if(this.hasConsecSpecialChars(recipient)) return false;
-
+  isValidRecipient(recipient) {
+    if (!this.hasLessChars(recipient, 65)) return false;
+    if (this.isSpecialCharacter(recipient[0]) || this.isSpecialCharacter(recipient[recipient.length - 1])) return false;
+    if (this.hasConsecSpecialChars(recipient)) return false;
     return true;
-},
+  },
 
- hasConsecSpecialChars  (str) {
-    for(let charIndex = 0; charIndex < str.length; charIndex++){
-        if(charIndex + 1 < str.length) {
-            let curChar = str[charIndex];
-            let nextChar = str[charIndex + 1];
+  hasConsecSpecialChars(str) {
+    for (let charIndex = 0; charIndex < str.length; charIndex++) {
+      if (charIndex + 1 < str.length) {
+        let curChar = str[charIndex];
+        let nextChar = str[charIndex + 1];
 
-            if(curChar === nextChar && 
-              this.isSpecialCharacter(curChar) &&
-              this.isSpecialCharacter(nextChar)){
-                    return true;
-            } 
+        if (curChar === nextChar &&
+          this.isSpecialCharacter(curChar) &&
+          this.isSpecialCharacter(nextChar)) {
+          return true;
         }
+      }
     }
     return false;
-},
+  },
 
- isSpecialCharacter (char) {
-    // Is a special character if not a letter and not a number
+  isSpecialCharacter(char) {
     return (!Number(char) && !this.isLetter(char)) ? true : false;
-},
+  },
 
- isLetter (char) {
+  isLetter(char) {
     return (this.isVowel(char) || this.isConsonant(char)) ? true : false;
-},
+  },
 
- isVowel (char) {
-    switch(char){
+  isVowel(char) {
+    switch (char) {
       case "A":
       case "a":
       case "E":
@@ -226,10 +161,10 @@ hasLessChars (str, charLimit) {
       default:
         return false;
     }
-},
-  
- isConsonant (char) {
-    switch(char.toLowerCase()){
+  },
+
+  isConsonant(char) {
+    switch (char.toLowerCase()) {
       case "b":
       case "c":
       case "d":
@@ -276,55 +211,55 @@ hasLessChars (str, charLimit) {
 
 export const STATE_ABBREVIATION_LIST = [
   "AL",
-"AK",
-"AZ",
-"AR",
-"CA",
-"CO",
-"CT",
-"DE",
-"FL",
-"GA",
-"HI",
-"ID",
-"IL",
-"IN",
-"IA",
-"KS",
-"KY",
-"LA",
-"ME",
-"MD",
-"MA",
-"MI",
-"MN",
-"MS",
-"MO",
-"MT",
-"NE",
-"NV",
-"NH",
-"NJ",
-"NM",
-"NY",
-"NC",
-"ND",
-"OH",
-"OK",
-"OR",
-"PA",
-"RI",
-"SC",
-"SD",
-"TN",
-"TX",
-"UT",
-"VT",
-"VA",
-"WA",
-"WV",
-"WI",
-"WY",
+  "AK",
+  "AZ",
+  "AR",
+  "CA",
+  "CO",
+  "CT",
+  "DE",
+  "FL",
+  "GA",
+  "HI",
+  "ID",
+  "IL",
+  "IN",
+  "IA",
+  "KS",
+  "KY",
+  "LA",
+  "ME",
+  "MD",
+  "MA",
+  "MI",
+  "MN",
+  "MS",
+  "MO",
+  "MT",
+  "NE",
+  "NV",
+  "NH",
+  "NJ",
+  "NM",
+  "NY",
+  "NC",
+  "ND",
+  "OH",
+  "OK",
+  "OR",
+  "PA",
+  "RI",
+  "SC",
+  "SD",
+  "TN",
+  "TX",
+  "UT",
+  "VT",
+  "VA",
+  "WA",
+  "WV",
+  "WI",
+  "WY",
 ]
 
 export const UPPERCASE_TOP_LEVEL_DOMAIN_LIST = [
