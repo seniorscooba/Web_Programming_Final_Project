@@ -1,19 +1,61 @@
 <article class="events">
-  <h1>Events Home</h1>
-  <h2 class="home-search-header">Events Search</h1>
-    <form autocomplete="off" action="/action_page.php">
+  <h1 class="home-search-header">Events Page</h1>
+  
+  <form autocomplete="off" action="/action_page.php">
       <div class="autocomplete" style="width:300px;">
         <input id="eventSearchInput" type="text" name="eventSearchInput" placeholder="Event name">
       </div>
       <input type="submit">
     </form>
-    <h2 class="home-tool-header">Events Home</h1>
-      <p class="home-about">
-        Here you can make events and search for them.
+
+  {{#if loggedIn}}
+  <h1>Create Event</h1>
+  <form action="/events" method="POST" class="event-form" id="event-form">
+    <div class="form-group">
+      <label for="eventName">Event Name:</label>
+      <input type="text" id="eventName" name="eventName" class="form-control" placeholder="Event Name"
+          value="{{eventName}}" required>
+      <br>
+      <label for="eventDescription">Event Description</label>
+      <textarea id="eventDescription" name="eventDescription" cols="50" rows="5" value="{{eventDescription}}" required></textarea>
+      <br>
+      <label for="eventLocation">Event Location:</label>
+      <input type="text" id="eventLocation" name="eventLocation" class="form-control" placeholder="Event Location"
+          value="{{eventLocation}}" required>
+      <br>
+      <label for="eventTime">Event Time:</label>
+      <input type="text" id="eventTime" name="eventTime" class="form-control" placeholder="Event Time"
+          value="{{eventTime}}" required>
+      <br>
+      <label for="eventDate">Event Date:</label>
+      <input type="text" id="eventDate" name="eventDate" class="form-control" placeholder="Event Date"
+          value="{{eventDate}}" required>
+      <br>
+      <div class="form-group hidden" id="error-container">
+      <p class="alert alert-danger text-goes-here">
       </p>
-      </script>
-      {{!-- TODO: add the SRI Hash --}}
-      {{!--
-      <script src="../public/js/event_autocomplete.js" integrity="" crossorigin="anonymous">
-      </script> --}}
+      <button type="submit" id="event-submit" class="btnClass">Create Event</button>
+    </div>
+    
+  </form>
+  {{/if}}
+
+
+  <div class="form-group hidden" id="event-container">
+      <ol id="event-list"> 
+        {{#each events}}  
+        <div class="event-display">
+          <h3>{{eventName}}</h3>
+          <p>{{eventDescription}}</p>
+          <p>{{eventLocation}}</p>
+          <p>{{eventTime}}</p>
+          <p>{{eventDate}}</p>
+          <form action="/addAttendee/{{this._id}}" method="POST">
+          <button type="submit">Attend Event</button>
+        </form>
+        </div>
+        {{/each}}
+      </ol>
+  </div> 
+
 </article>

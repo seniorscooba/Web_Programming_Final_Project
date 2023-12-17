@@ -2,32 +2,15 @@
 import {Router} from 'express';
 const router = Router();
 import validation from '../validation.js';
-import { eventData } from '../data/index.js'
-import { events } from '../config/mongoCollections.js';
+import * as eventsData from '../data//events.js';
 import { createEvent } from '../data/events.js';
-
-
-router.route('/').get(async (req, res) => {
-  //code here for GET will render the home handlebars file
-  try {
-    const context = { 
-      title:'Events',
-      isEventPage: true,
-      loggedIn:true,
-      events:eventList
-    };
-    res.render('events', context);
-  } catch (e) {
-    res.status(500).json({error: e});
-  }
-});
 
 router
   .route('/') 
   .post(async (req, res) => {
     const body = req.body
     console.log(req.body)
-    if (!body || Object.keys(body).length === 0) {
+    if (!body || Object.keys(body).length == 0) {
       return res.status(400).json({error: 'There are no fields in the request body'});
     }
     try {
@@ -50,25 +33,23 @@ router
 
   });
 
-
-router.route('/events').get(async (req, res) => {
+router.route('/').get(async (req, res) => {
   //code here for GET will render the home handlebars file
   try {
-    if(req.session.user){
-      const eventList = await events.getAll();
-      res.render('events', { title:'Events', 
-                            loggedIn:true,
-                            events:eventList});
-    }
-      else
-        res.render('events', { title:'Events', loggedIn:false });
+     const context = { 
+      title:'Events',
+      isEventPage: (req.session.user) ? true : false,
+      loggedIn:true,
+      events:eventList
+    };
+    res.render('events', context);
   } catch (e) {
     res.status(500).json({error: e});
   }
 });
   
 router
-  .route('/events') 
+  .route('/') 
   .post(async (req, res) => {
     try {
       if (req.session.user) {
@@ -78,13 +59,14 @@ router
         let eventDate = validation.checkString(req.body['eventDate'], 'event date');
         let eventTime = validation.checkString(req.body['eventTime'], 'event time');
         let user = req.session.user;
+        //console.log("Here")
         let returnEvent = await createEvent(user._id.toString(), eventName, eventDescription, eventLocation, eventDate, eventTime);
-        
+        //console.log("Here Fortnite")
         console.log("made it to events")
         if (!returnEvent) {
           throw "Failed to insert event!";
         }
-        res.status(200).redirect('/events');
+        res.status(200).render('events', { title: "Events" });
       }
     } catch (e) {
       res.status(500).json({ error: e });
@@ -92,6 +74,18 @@ router
 
 
   });
+
+
+router.route('/addAttendee/:eventId').post(async (req, res) => {
+  try {
+    const eventId = req.params.eventId;
+    const result = await eventsData.addAttendee(eventId, req.session.user)
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 router
   .route('/events')
@@ -102,9 +96,9 @@ router
       return res.status(400).json({error: e});
     }
     try {
-      let event = await eventData.get(req.params.id);
+      let event = await eventsData.get(req.params.id);
       if (!event) { throw "event does not exist" }
-      await eventData.remove(req.params.id);
+      await eventsData.remove(req.params.id);
       return res.json({id: req.params.id, deleted: true});
     } catch (e) {
       return res.status(404).json({error: e});
