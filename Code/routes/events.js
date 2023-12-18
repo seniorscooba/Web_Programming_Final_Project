@@ -1,33 +1,32 @@
 //import express and express router as shown in lecture code and worked in previous labs.  Import your data functions from /data/characters.js that you will call in your routes below
-import {Router} from 'express';
+import { Router } from 'express';
 const router = Router();
 import validation from '../validation.js';
 import * as eventsData from '../data//events.js';
 import { createEvent } from '../data/events.js';
 
-
-router.route('/').get(async (req, res) => {
-  //code here for GET will render the home handlebars file
-  try {
-    if (req.session.user) {
-      const eventList = await eventsData.getAllEvents();
-      res.render('events', { title:'Events', 
-                            loggedIn:true,
-                            events:eventList,
-                            isEventPage:true
-                          });
-    } else {
-      throw "Must be logged in!"
-    }
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-
 router
-  .route('/') 
+  .route('/')
+  .get(async (req, res) => {
+    //code here for GET will render the home handlebars file
+    try {
+      if (req.session.user) {
+        const eventList = await eventsData.getAllEvents();
+        res.render('events', {
+          title: 'Events',
+          loggedIn: true,
+          events: eventList,
+          isEventPage: true
+        });
+
+      } else {
+        throw "Must be logged in!"
+      }
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  })
   .post(async (req, res) => {
     try {
       if (req.session.user) {
@@ -38,7 +37,7 @@ router
         let eventTime = validation.checkString(req.body['eventTime'], 'event time');
         let user = req.session.user;
         let returnEvent = await createEvent(user._id.toString(), eventName, eventDescription, eventLocation, eventDate, eventTime);
-        
+
         console.log("made it to events")
         if (!returnEvent) {
           throw "Failed to insert event!";
@@ -51,9 +50,17 @@ router
     }
   });
 
-
-
-
+  router
+  .route('/all')
+  .get(async (req, res) => {
+    try {
+      let eventObjects = await eventsData.getAllEvents();
+      let eventNames = eventObjects.map((eventObject) => eventObject.eventName);
+      res.json(eventNames);
+    } catch {
+      res.status(500).json({ error: e });
+    }
+  });
 
   router.route('/:id').get(async (req, res) => { // update checkbox
     try {
@@ -97,7 +104,6 @@ router
       res.status(500).json({ error: e });
     }
   });
-
 
 
 export default router;
