@@ -42,11 +42,19 @@ router
         if (!returnEvent) {
           throw "Failed to insert event!";
         }
-        res.status(200).redirect('/events');
+        //res.status(200).redirect('/events');
+        const eventList = await eventsData.getAllEvents();
+        res.render('events', {
+          title: 'Events',
+          loggedIn: true,
+          events: eventList,
+          isEventPage: true
+        });
+
         console.log("i made it")
       }
     } catch (e) {
-      res.status(500).json({ error: "i am the error" });
+      res.status(500).json({ error: e });
     }
   });
 
