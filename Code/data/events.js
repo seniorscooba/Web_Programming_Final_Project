@@ -45,6 +45,7 @@ export const createEvent = async (
     eventLocation : eventLocation,
     eventTime : eventTime,
     eventDate : eventDate,
+    eventImage : "",
     attendeeList : [],
     attend : false
   }

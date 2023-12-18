@@ -37,7 +37,12 @@ router
         let eventTime = validation.checkString(req.body['eventTime'], 'event time');
         let user = req.session.user;
         let returnEvent = await createEvent(user._id.toString(), eventName, eventDescription, eventLocation, eventDate, eventTime);
-
+        
+        let eventImg = req.body['eventImg']
+        let new_event = await eventsData.get(returnEvent)
+        if (eventImg !== "") {
+          new_event.eventImage = eventImg
+        }
         console.log("made it to events")
         if (!returnEvent) {
           throw "Failed to insert event!";
