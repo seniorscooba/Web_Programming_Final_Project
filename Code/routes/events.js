@@ -76,7 +76,7 @@ router
           if (isChecked != undefined) {
             let found = event.attendeeList.find((x) => x === user);
             event.attendeeList.push(user);
-            eventsData.update(event)
+            let data = await eventsData.update(event)
           }
           else if(isNotChecked != undefined){
             let found = event.attendeeList.find((x) => x === user);
@@ -85,7 +85,7 @@ router
                 return item !== user
               })
             }
-            eventsData.update(event)
+            let data = await eventsData.update(event)
           }
           else {
             throw "Failed to add attendee!";

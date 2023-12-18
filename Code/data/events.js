@@ -53,7 +53,7 @@ export const createEvent = async (
   let newId = insert.insertedId.toString();
   let event = await get(newId);
   event._id = newId.toString();
-  return await get(insertionStatus.insertedId.toString());
+  return await get(event._id);
 };
 
 
