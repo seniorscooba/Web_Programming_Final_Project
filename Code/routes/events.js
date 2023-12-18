@@ -55,8 +55,8 @@ router
   .get(async (req, res) => {
     try {
       let eventObjects = await eventsData.getAllEvents();
-      let eventNames = eventObjects.map((eventObject) => eventObject.eventName);
-      res.json(eventNames);
+      let eventLocations = eventObjects.map((eventObject) => eventObject.eventLocation);
+      res.json(eventLocations);
     } catch {
       res.status(500).json({ error: e });
     }
