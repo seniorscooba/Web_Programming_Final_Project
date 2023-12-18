@@ -22,7 +22,7 @@ router.route('/').get(async (req, res) => {
   }
 });
 
-  
+
 router
   .route('/') 
   .post(async (req, res) => {
@@ -40,10 +40,11 @@ router
         if (!returnEvent) {
           throw "Failed to insert event!";
         }
-        res.status(200).render('events', { title: "Events" });
+        res.status(200).redirect('/events');
+        console.log("i made it")
       }
     } catch (e) {
-      res.status(500).json({ error: e });
+      res.status(500).json({ error: "i am the error" });
     }
   });
 
