@@ -33,6 +33,39 @@ router.route('/json').get(async (req, res) => {
   }
 });
 
+router.route('/latest').get(async (req, res) => {
+  //code here for GET will render the home handlebars file
+  try {
+    if(req.session.user){
+      const postList = await posts.getLatestPosts();
+
+      res.render('posts', { title:'Posts', 
+                            loggedIn:true,
+                            posts:postList});
+    }
+     else
+       res.render('posts', { title:'Posts', loggedIn:false });
+  } catch (e) {
+    res.status(500).json({error: e});
+  }
+});
+
+router.route('/favorite').get(async (req, res) => {
+  //code here for GET will render the home handlebars file
+  try {
+    if(req.session.user){
+      const postList = await posts.getFavoritePosts();
+      res.render('posts', { title:'Posts', 
+                            loggedIn:true,
+                            posts:postList});
+    }
+     else
+       res.render('posts', { title:'Posts', loggedIn:false });
+  } catch (e) {
+    res.status(500).json({error: e});
+  }
+});
+
 router.route('/:id/comments/:userId').post(async (req, res) => {
   //code here for GET will render the home handlebars file
   if(req.session.user){
@@ -103,6 +136,7 @@ router.route('/:id').post(async (req, res) => { // update checkbox
     if(req.session.user){
       let url = req.url.split('/');
       let id = url[1];
+      let updatedPost = {};
       if(req.body){     
         let isChecked = req.body['checked'];
         let isNotChecked = req.body['notChecked'];
@@ -112,8 +146,8 @@ router.route('/:id').post(async (req, res) => { // update checkbox
           let upvotee = req.session.user._id;
           let foundUpvoteId = post.postUpvotes.find((x) => x === upvotee);
           post.postUpvotes.push(upvotee);
-          posts.update(post);
-  
+          updatedPost = await posts.update(post);
+          updatedPost.value['isChecked'] = true;
           // add to posts user upvote list
         }
         else if(isNotChecked != undefined){
@@ -125,12 +159,14 @@ router.route('/:id').post(async (req, res) => { // update checkbox
               return item !== upvotee
             })
           }
-          posts.update(post);
+          updatedPost = await posts.update(post);
+          updatedPost.value['isChecked'] = false;
         }
         else {
           throw "Failed to toggle upvote post!";
         }
-        res.status(200).redirect('/posts');
+        
+        res.status(200).send(updatedPost.value);
       }
     }
 

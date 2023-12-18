@@ -4,55 +4,48 @@
   let postUpvotes = $('#post-upvotes');
   postUpvotes.hide();
 
-  //let postList = {};
-  //let loggedInIdUser = {};
-  // let requestConfig = {
-  //   method: 'GET',
-  //   url: `${document.URL}/json`,
-  //   isChecked: true,
-  //   data: `checked`
-  // };
-  // $.ajax(requestConfig).then(function (responseMessage) {
-  //   postList = responseMessage[0];
-  //   loggedInUser = responseMessage[1];
-  // });
-
   //Let's get references to our form elements and the div where the todo's will go
   let postsList = $('#post-list');
-  for(elementIndex in postElements){
+  if(postsList)
+  {
+    for(elementIndex in postElements){
     let element = postElements[elementIndex];
     // get post upvotees for element
     bindEventsToPostsCheckbox(element);
+
+     // setup frequency breakdown button listener
+     let freqBtn = document.getElementById(`word-breakdown-btn:${element.id}`);
+      if(freqBtn)
+       freqBtn.addEventListener("click", wordBreakdownFunction);
+    }
   }
 
-  // for(elementIndex in elements){
-  //   let element = elements[elementIndex];
-  //   let checkbox = element.getElementsByClassName("upvote-checkbox")[0];
-  //   for(post in postList){
-  //     if(postList[post]._id == element.id){
-  //       let foundUpvotee = postList[post].postUpvotes.find(x => x === loggedInUser._id);
-  //       if(foundUpvotee){
-  //         checkbox.checked = true;
-  //       }
-  //     }
-  //   }
-  // }
+  function wordBreakdownFunction() {
+    // get content
+    let postContentId = this.id.split(':')[1];
+    let postContentEle = document.getElementById(`post-content:${postContentId}`);
+    let postContent = postContentEle.textContent;
 
-  const validateField = (field) =>{
-    try{
-      if(Array.isArray(field)){
-        // check for present fields
-        if(field.length && field.length > 0)
-          return field;
+    // perform breakdown
+    // split all words on white space
+    let words = postContent.split(' ');
+    let wordCountMap = {};
+    for(wordIndex in words){
+        let word = words[wordIndex];
+        if(wordCountMap[word])
+            wordCountMap[word]++;
         else
-          return "N/A";
-      }
-      if(field != undefined && field != "")
-        return field;
-      else
-        return "N/A";
+            wordCountMap[word] = 1; 
     }
-    catch(exception) {}
+
+    // build string for alert
+    let wordStr = 'WORD FREQUENCY BREAKDOWN\n' ;
+    wordStr = wordStr + '----------------------------------------\n' ;
+    for(wordKey in wordCountMap){
+      wordStr = wordStr + `${wordKey} : ${wordCountMap[wordKey]}\n`;
+    }
+    alert(wordStr);
+    return wordCountMap;
   }
 
   function bindEventsToPostsCheckbox(div) {
@@ -201,19 +194,6 @@
     bindEventsToCheckbox(elements[elementIndex]);
   }
 
-  // for(elementIndex in elements){
-  //   let element = elements[elementIndex];
-  //   let checkbox = element.getElementsByClassName("upvote-checkbox")[0];
-  //   for(post in postList){
-  //     if(postList[post]._id == element.id){
-  //       let foundUpvotee = postList[post].postUpvotes.find(x => x === loggedInUser._id);
-  //       if(foundUpvotee){
-  //         checkbox.checked = true;
-  //       }
-  //     }
-  //   }
-  // }
-
   function bindEventsToCheckbox(div) {
     if (div.id) {
       let event = $(`input[name=attendEvent${div.id}]`);
@@ -262,6 +242,8 @@
       });
     }
   }   
+
+
 
 })(window.jQuery);
 

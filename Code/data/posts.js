@@ -65,6 +65,30 @@ export const createPostComment = async (postId, userId, comment) => {
     }
 };
 
+export const sortDate = async (array) => {
+    array.sort(function(a,b){
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(b.postDate) - new Date(a.postDate);
+      });
+};
+
+export const getLatestPosts = async () => {
+    const postCollection = await posts();
+    const postList = await postCollection.find().sort( { postDate : 1} ).toArray();
+    sortDate(postList);
+    if (!postList) throw 'Could not get latest posts';
+    return postList;
+};
+
+export const getFavoritePosts = async () => {
+    const postCollection = await posts();
+    const postList = await postCollection.find({ }).sort( { postUpvotes : -1} ).toArray();
+
+    if (!postList) throw 'Could not get latest posts';
+    return postList;
+};
+
 export const getAllPosts = async () => {
     const postCollection = await posts();
     const postList = await postCollection.find({}).toArray();
