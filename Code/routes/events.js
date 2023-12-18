@@ -9,12 +9,15 @@ import { createEvent } from '../data/events.js';
 router.route('/').get(async (req, res) => {
   //code here for GET will render the home handlebars file
   try {
-
     if (req.session.user) {
       const eventList = await eventsData.getAllEvents();
       res.render('events', { title:'Events', 
                             loggedIn:true,
-                            events:eventList});
+                            events:eventList,
+                            isEventPage:true
+                          });
+    } else {
+      throw "Must be logged in!"
     }
   } catch (e) {
     console.error(e);
