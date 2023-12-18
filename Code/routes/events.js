@@ -30,27 +30,38 @@ router
   .post(async (req, res) => {
     try {
       if (req.session.user) {
-        let eventName = validation.checkString(req.body['eventName'], 'event name');
-        let eventDescription = validation.checkString(req.body['eventDescription'], 'event description');
-        let eventLocation = validation.checkString(req.body['eventLocation'], 'event location');
-        let eventDate = validation.checkString(req.body['eventDate'], 'event date');
-        let eventTime = validation.checkString(req.body['eventTime'], 'event time');
-        let user = req.session.user;
-        let returnEvent = await createEvent(user._id.toString(), eventName, eventDescription, eventLocation, eventDate, eventTime);
-
-        console.log("made it to events")
-        if (!returnEvent) {
-          throw "Failed to insert event!";
+        if(req.body['eventSearchInput']){
+          const eventList = await eventsData.getAllEvents();
+          res.render('events', {
+            title: 'Events',
+            loggedIn: true,
+            events: eventList,
+            isEventPage: true,
+            eventLocation: req.body['eventSearchInput']
+          });
         }
-        //res.status(200).redirect('/events');
-        const eventList = await eventsData.getAllEvents();
-        res.render('events', {
-          title: 'Events',
-          loggedIn: true,
-          events: eventList,
-          isEventPage: true
-        });
-
+        else{
+          let eventName = validation.checkString(req.body['eventName'], 'event name');
+          let eventDescription = validation.checkString(req.body['eventDescription'], 'event description');
+          let eventLocation = validation.checkString(req.body['eventLocation'], 'event location');
+          let eventDate = validation.checkString(req.body['eventDate'], 'event date');
+          let eventTime = validation.checkString(req.body['eventTime'], 'event time');
+          let user = req.session.user;
+          let returnEvent = await createEvent(user._id.toString(), eventName, eventDescription, eventLocation, eventDate, eventTime);
+  
+          console.log("made it to events")
+          if (!returnEvent) {
+            throw "Failed to insert event!";
+          }
+          //res.status(200).redirect('/events');
+          const eventList = await eventsData.getAllEvents();
+          res.render('events', {
+            title: 'Events',
+            loggedIn: true,
+            events: eventList,
+            isEventPage: true
+          });
+        }
         console.log("i made it")
       }
     } catch (e) {
