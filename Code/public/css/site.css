@@ -94,6 +94,12 @@ input[type=text] {
 	background-size: cover;
 }
 
+label {
+	color: #6e78ff;
+	font-weight: bold;
+	display: inline;
+}
+
 * { box-sizing: border-box; }
 body {
   font: 16px Arial;
