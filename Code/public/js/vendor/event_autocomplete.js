@@ -1,6 +1,8 @@
 // Boilerplate autocomplete code
 // from: https://www.w3schools.com/howto/howto_js_autocomplete.asp
 
+import * as eventsData from '../data//events.js';
+
 function autocomplete(inp, arr) {
     var currentFocus;
     inp.addEventListener("input", function (e) {
@@ -67,13 +69,9 @@ function autocomplete(inp, arr) {
     });
 }
 
-// TODO: read from the events database
-function getSearchTerms() {
-    return [
-        "Event A",
-        "Event B",
-        "Event C"
-    ];
+async function getSearchTerms() {
+    let eventList = await eventsData.getAllEvents();
+    return eventList.map((eventObject) => eventObject.eventName);
 }
 
 autocomplete(document.getElementById("eventSearchInput"), getSearchTerms());
