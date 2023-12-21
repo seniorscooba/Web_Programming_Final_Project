@@ -24,10 +24,10 @@ router
       let email = validation.checkEmail(req.body['emailAddressInput']);
       let password = validation.checkPassword(req.body['passwordInput'], 'password');
       let confirmPass = validation.checkPassword(req.body['confirmPasswordInput'], 'confirmation password');
-      let role = validation.checkRole(req.body['roleInput'], 'role');
+      //let role = validation.checkRole(req.body['roleInput'], 'role');
       if (password !== confirmPass)
         throw "Passwords do not match";
-      let dbResponse = await registerUser(firstName, lastName, email, password, role);
+      let dbResponse = await registerUser(firstName, lastName, email, password, null);
       if (dbResponse['insertedUser'] === true)
         res.status(200).redirect('login');
       else
@@ -71,30 +71,6 @@ router
       });
     }
   });
-
-router.route('/protected').get(async (req, res) => {
-  let firstName = validation.checkName(req.session.user['firstName']);
-  let lastName = validation.checkName(req.session.user['lastName']);
-  let role = validation.checkRole(req.session.user['role']);
-  let protectStr = `Welcome ${firstName} ${lastName} , the time is now: ${new Date().toLocaleTimeString()}. Your role in the system is: ${role}.`;
-  let isAdmin = false;
-  if (role === 'admin') isAdmin = true;
-  res.status(200).render('protected', {
-    ProtectedString: protectStr,
-    IsAdmin: isAdmin,
-    title: "User Page"
-  });
-});
-
-router.route('/admin').get(async (req, res) => {
-  let firstName = validation.checkName(req.session.user['firstName']);
-  let lastName = validation.checkName(req.session.user['lastName']);
-  let adminStr = `Welcome ${firstName} ${lastName}, the time is now: ${new Date().toLocaleTimeString()}. You get super secret admin access since you are an admin. Remember, with great power comes great responsibility!!`;
-  res.status(200).render('admin', {
-    AdminString: adminStr,
-    title: "Admin Page",
-  });
-});
 
 router.route('/error').get(async (req, res) => {
   let errorCode = "403";
