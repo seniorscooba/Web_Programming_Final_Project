@@ -52,10 +52,13 @@ app.get('/', (req, res, next) => {
     else if(req.session.user.role === 'user'){    
       return res.redirect('/protected');
     }
+    else{
+      return res.redirect('/posts');
+    }
   } else {
-     let log = `${new Date().toUTCString()}: ${req.method}: ${req.originalUrl} (Authenticated)`;
+     let log = `${new Date().toUTCString()}: ${req.method}: ${req.originalUrl} (NOT Authenticated)`;
      console.log(log);
-    return res.redirect('/posts');
+    return res.redirect('/login');
   }
 });
 
@@ -114,6 +117,10 @@ if (req.session.user) { // user is authenticated
   }
   else if(req.session.user.role === 'user'){        
     return res.redirect('/protected');
+  }
+  else
+  {
+    return res.redirect('/login');
   }
 } else {
   next();
